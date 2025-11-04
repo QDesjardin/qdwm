@@ -19,7 +19,7 @@ static const unsigned int barborderpx    = 0;  /* border pixel of bar */
 #endif // BAR_BORDER_PATCH
 static const unsigned int snap           = 32;  /* snap pixel */
 #if SWALLOW_PATCH
-static const int swallowfloating         = 0;   /* 1 means swallow floating windows by default */
+static const int swallowfloating         = 1;   /* 1 means swallow floating windows by default */
 #endif // SWALLOW_PATCH
 #if BAR_TAGPREVIEW_PATCH
 static const int scalepreview            = 4;        /* Tag preview scaling */
@@ -150,6 +150,9 @@ static int floatindicatortype            = INDICATOR_TOP_LEFT_SQUARE;
 static int fakefsindicatortype           = INDICATOR_PLUS;
 static int floatfakefsindicatortype      = INDICATOR_PLUS_AND_LARGER_SQUARE;
 #endif // FAKEFULLSCREEN_CLIENT_PATCH
+#if ALWAYSONTOP_PATCH
+static int aotindicatortype              = INDICATOR_TOP_LEFT_LARGER_SQUARE;
+#endif // ALWAYSONTOP_PATCH
 #if ONLYQUITONEMPTY_PATCH
 static const int quit_empty_window_count = 0;   /* only allow dwm to quit if no (<= count) windows are open */
 #endif // ONLYQUITONEMPTY_PATCH
@@ -211,6 +214,11 @@ static char urgfgcolor[]                 = "#bbbbbb";
 static char urgbgcolor[]                 = "#222222";
 static char urgbordercolor[]             = "#ff0000";
 static char urgfloatcolor[]              = "#db8fd9";
+
+#if BAR_LTSYMBOL_SCHEME_PATCH
+static char ltsymbolfgcolor[]            = "#222222";
+static char ltsymbolbgcolor[]            = "#fe9877";
+#endif // BAR_LTSYMBOL_SCHEME_PATCH
 
 #if RENAMED_SCRATCHPADS_PATCH
 static char scratchselfgcolor[]          = "#FFF7D4";
@@ -274,6 +282,9 @@ static const unsigned int alphas[][3] = {
 	[SchemeHidNorm]      = { OPAQUE, baralpha, borderalpha },
 	[SchemeHidSel]       = { OPAQUE, baralpha, borderalpha },
 	[SchemeUrg]          = { OPAQUE, baralpha, borderalpha },
+	#if BAR_LTSYMBOL_SCHEME_PATCH
+	[SchemeLtSymbol]     = { OPAQUE, baralpha, borderalpha },
+	#endif // BAR_LTSYMBOL_SCHEME_PATCH
 	#if RENAMED_SCRATCHPADS_PATCH
 	[SchemeScratchSel]  = { OPAQUE, baralpha, borderalpha },
 	[SchemeScratchNorm] = { OPAQUE, baralpha, borderalpha },
@@ -329,6 +340,9 @@ static const int color_ptrs[][ColCount] = {
 	[SchemeHidNorm]      = { 5,      0,      0,      -1 },
 	[SchemeHidSel]       = { 6,      -1,     -1,     -1 },
 	[SchemeUrg]          = { 7,      9,      9,      15 },
+	#if BAR_LTSYMBOL_SCHEME_PATCH
+	[SchemeLtSymbol]     = { -1,     3,      0,       0 },
+	#endif // BAR_LTSYMBOL_SCHEME_PATCH
 };
 #endif // BAR_VTCOLORS_PATCH
 
@@ -343,6 +357,9 @@ static char *colors[][ColCount] = {
 	[SchemeHidNorm]      = { hidnormfgcolor,   hidnormbgcolor,   c000000,              c000000 },
 	[SchemeHidSel]       = { hidselfgcolor,    hidselbgcolor,    c000000,              c000000 },
 	[SchemeUrg]          = { urgfgcolor,       urgbgcolor,       urgbordercolor,       urgfloatcolor },
+	#if BAR_LTSYMBOL_SCHEME_PATCH
+	[SchemeLtSymbol]     = { ltsymbolfgcolor,  ltsymbolbgcolor,  c000000,              c000000 },
+	#endif // BAR_LTSYMBOL_SCHEME_PATCH
 	#if RENAMED_SCRATCHPADS_PATCH
 	[SchemeScratchSel]  = { scratchselfgcolor, scratchselbgcolor, scratchselbordercolor, scratchselfloatcolor },
 	[SchemeScratchNorm] = { scratchnormfgcolor, scratchnormbgcolor, scratchnormbordercolor, scratchnormfloatcolor },
@@ -508,10 +525,8 @@ static const Rule rules[] = {
 	RULE(.wintype = WTYPE "UTILITY", .isfloating = 1)
 	RULE(.wintype = WTYPE "TOOLBAR", .isfloating = 1)
 	RULE(.wintype = WTYPE "SPLASH", .isfloating = 1)
-	/*RULE(.class = "Gimp", .tags = 1 << 4)
-	RULE(.class = "Firefox", .tags = 1 << 7)*/
-	RULE(.class = "Alacritty", .isterminal = 1, .tags = 1 << 2, .monitor = 0)
-  RULE(.class = "st", .isterminal = 1)
+	RULE(.class = "Gimp", .tags = 1 << 4)
+	RULE(.class = "Firefox", .tags = 1 << 7)
 	#if RENAMED_SCRATCHPADS_PATCH
 	RULE(.instance = "spterm", .scratchkey = 's', .isfloating = 1)
 	#elif SCRATCHPADS_PATCH
@@ -639,13 +654,23 @@ static const BarRule barrules[] = {
 };
 
 /* layout(s) */
-static const float mfact     = 0.60; /* factor of master area size [0.05..0.95] */
+static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
 #if FLEXTILE_DELUXE_LAYOUT
 static const int nstack      = 0;    /* number of clients in primary stack area */
 #endif // FLEXTILE_DELUXE_LAYOUT
 static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
+static const int refreshrate = 120;  /* refresh rate (per second) for client move/resize */
+#if PLACEMOUSE_PATCH
+static const int refreshrate_placemouse = 60; /* refresh rate (per second) for placemouse */
+#endif // PLACEMOUSE_PATCH
+#if DRAGMFACT_PATCH
+static const int refreshrate_dragmfact = 40; /* refresh rate (per second) for dragmfact */
+#endif // DRAGMFACT_PATCH
+#if DRAGCFACT_PATCH
+static const int refreshrate_dragcfact = 60; /* refresh rate (per second) for dragcfact */
+#endif // DRAGCFACT_PATCH
 #if DECORATION_HINTS_PATCH
 static const int decorhints  = 1;    /* 1 means respect decoration hints */
 #endif // DECORATION_HINTS_PATCH
@@ -868,6 +893,18 @@ static const char *xkb_layouts[]  = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 #endif // NODMENU_PATCH
 static const char *dmenucmd[] = {
+	/*"dmenu_run",
+	#if !NODMENU_PATCH
+	"-m", dmenumon,
+	#endif // NODMENU_PATCH
+	"-fn", dmenufont,
+	"-nb", normbgcolor,
+	"-nf", normfgcolor,
+	"-sb", selbgcolor,
+	"-sf", selfgcolor,
+	#if BAR_DMENUMATCHTOP_PATCH
+	topbar ? NULL : "-b",
+	#endif // BAR_DMENUMATCHTOP_PATCH*/
 	"rofi",
   "-show",
   "run",
@@ -900,15 +937,114 @@ static const Key on_empty_keys[] = {
 };
 #endif // ON_EMPTY_KEYS_PATCH
 
+#if XRESOURCES_PATCH
+/*
+* Xresources preferences to load at startup.
+*
+*     Name                      Type       Address
+*    ------------------------------------------------
+*     "nmaster"                 INTEGER    &nmaster
+*     "mfact"                   FLOAT      &mfact
+*     "color1"                  STRING     &color1
+*
+* In the Xresources file setting resources shoud be prefixed with "dwm.", e.g.
+*
+*    dwm.nmaster: 1
+*    dwm.mfact: 0.50
+*    dwm.color1: #FA6EFA
+*
+* Note that the const qualifier must be removed from the variables if you plan on
+* overriding them with values from Xresources. While resources can be reloaded
+* using the xrdb function some changes may only take effect following a restart.
+*/
+ResourcePref resources[] = {
+	/* Resource name            Type       Address                */
+	{ "normfgcolor",            STRING,    &normfgcolor },
+	{ "normbgcolor",            STRING,    &normbgcolor },
+	{ "normbordercolor",        STRING,    &normbordercolor },
+	{ "normfloatcolor",         STRING,    &normfloatcolor },
+	{ "selfgcolor",             STRING,    &selfgcolor },
+	{ "selbgcolor",             STRING,    &selbgcolor },
+	{ "selbordercolor",         STRING,    &selbordercolor },
+	{ "selfloatcolor",          STRING,    &selfloatcolor },
+	{ "titlenormfgcolor",       STRING,    &titlenormfgcolor },
+	{ "titlenormbgcolor",       STRING,    &titlenormbgcolor },
+	{ "titlenormbordercolor",   STRING,    &titlenormbordercolor },
+	{ "titlenormfloatcolor",    STRING,    &titlenormfloatcolor },
+	{ "titleselfgcolor",        STRING,    &titleselfgcolor },
+	{ "titleselbgcolor",        STRING,    &titleselbgcolor },
+	{ "titleselbordercolor",    STRING,    &titleselbordercolor },
+	{ "titleselfloatcolor",     STRING,    &titleselfloatcolor },
+	{ "tagsnormfgcolor",        STRING,    &tagsnormfgcolor },
+	{ "tagsnormbgcolor",        STRING,    &tagsnormbgcolor },
+	{ "tagsnormbordercolor",    STRING,    &tagsnormbordercolor },
+	{ "tagsnormfloatcolor",     STRING,    &tagsnormfloatcolor },
+	{ "tagsselfgcolor",         STRING,    &tagsselfgcolor },
+	{ "tagsselbgcolor",         STRING,    &tagsselbgcolor },
+	{ "tagsselbordercolor",     STRING,    &tagsselbordercolor },
+	{ "tagsselfloatcolor",      STRING,    &tagsselfloatcolor },
+	{ "hidnormfgcolor",         STRING,    &hidnormfgcolor },
+	{ "hidnormbgcolor",         STRING,    &hidnormbgcolor },
+	{ "hidselfgcolor",          STRING,    &hidselfgcolor },
+	{ "hidselbgcolor",          STRING,    &hidselbgcolor },
+	{ "urgfgcolor",             STRING,    &urgfgcolor },
+	{ "urgbgcolor",             STRING,    &urgbgcolor },
+	{ "urgbordercolor",         STRING,    &urgbordercolor },
+	{ "urgfloatcolor",          STRING,    &urgfloatcolor },
+	#if RENAMED_SCRATCHPADS_PATCH
+	{ "scratchselfgcolor",      STRING,    &scratchselfgcolor },
+	{ "scratchselbgcolor",      STRING,    &scratchselbgcolor },
+	{ "scratchselbordercolor",  STRING,    &scratchselbordercolor },
+	{ "scratchselfloatcolor",   STRING,    &scratchselfloatcolor },
+	{ "scratchnormfgcolor",     STRING,    &scratchnormfgcolor },
+	{ "scratchnormbgcolor",     STRING,    &scratchnormbgcolor },
+	{ "scratchnormbordercolor", STRING,    &scratchnormbordercolor },
+	{ "scratchnormfloatcolor",  STRING,    &scratchnormfloatcolor },
+	#endif // RENAMED_SCRATCHPADS_PATCH
+	#if BAR_FLEXWINTITLE_PATCH
+	{ "normTTBbgcolor",         STRING,    &normTTBbgcolor },
+	{ "normLTRbgcolor",         STRING,    &normLTRbgcolor },
+	{ "normMONObgcolor",        STRING,    &normMONObgcolor },
+	{ "normGRIDbgcolor",        STRING,    &normGRIDbgcolor },
+	{ "normGRD1bgcolor",        STRING,    &normGRD1bgcolor },
+	{ "normGRD2bgcolor",        STRING,    &normGRD2bgcolor },
+	{ "normGRDMbgcolor",        STRING,    &normGRDMbgcolor },
+	{ "normHGRDbgcolor",        STRING,    &normHGRDbgcolor },
+	{ "normDWDLbgcolor",        STRING,    &normDWDLbgcolor },
+	{ "normSPRLbgcolor",        STRING,    &normSPRLbgcolor },
+	{ "normfloatbgcolor",       STRING,    &normfloatbgcolor },
+	{ "actTTBbgcolor",          STRING,    &actTTBbgcolor },
+	{ "actLTRbgcolor",          STRING,    &actLTRbgcolor },
+	{ "actMONObgcolor",         STRING,    &actMONObgcolor },
+	{ "actGRIDbgcolor",         STRING,    &actGRIDbgcolor },
+	{ "actGRD1bgcolor",         STRING,    &actGRD1bgcolor },
+	{ "actGRD2bgcolor",         STRING,    &actGRD2bgcolor },
+	{ "actGRDMbgcolor",         STRING,    &actGRDMbgcolor },
+	{ "actHGRDbgcolor",         STRING,    &actHGRDbgcolor },
+	{ "actDWDLbgcolor",         STRING,    &actDWDLbgcolor },
+	{ "actSPRLbgcolor",         STRING,    &actSPRLbgcolor },
+	{ "actfloatbgcolor",        STRING,    &actfloatbgcolor },
+	{ "selTTBbgcolor",          STRING,    &selTTBbgcolor },
+	{ "selLTRbgcolor",          STRING,    &selLTRbgcolor },
+	{ "selMONObgcolor",         STRING,    &selMONObgcolor },
+	{ "selGRIDbgcolor",         STRING,    &selGRIDbgcolor },
+	{ "selGRD1bgcolor",         STRING,    &selGRD1bgcolor },
+	{ "selGRD2bgcolor",         STRING,    &selGRD2bgcolor },
+	{ "selGRDMbgcolor",         STRING,    &selGRDMbgcolor },
+	{ "selHGRDbgcolor",         STRING,    &selHGRDbgcolor },
+	{ "selDWDLbgcolor",         STRING,    &selDWDLbgcolor },
+	{ "selSPRLbgcolor",         STRING,    &selSPRLbgcolor },
+	{ "selfloatbgcolor",        STRING,    &selfloatbgcolor },
+	#endif // BAR_FLEXWINTITLE_PATCH
+	#if BAR_LTSYMBOL_SCHEME_PATCH
+	{ "ltsymbolfgcolor",        STRING,    &ltsymbolfgcolor },
+	{ "ltsymbolbgcolor",        STRING,    &ltsymbolbgcolor },
+	#endif // BAR_LTSYMBOL_SCHEME_PATCH
+};
+#endif // XRESOURCES_PATCH
+
 static const Key keys[] = {
 	/* modifier                     key            function                argument */
-  { ControlMask,									XK_Print,			 spawn,									 SHCMD("dunstify \"Selecting area for screenie..\" && maim -s $HOME/screenies/pic-select-$(date '+%y%m%d-%H%M-%S').png && dunstify \"Saved pic-select-$(date '+%y%m%d-%H%M-%S').png\"") },  
-	{ 0,														XK_Print,			 spawn,									 SHCMD("maim -i $(xdotool getactivewindow) $HOME/screenies/pic-$(date '+%y%m%d-%H%M-%S').png && dunstify \"Saved pic-$(date '+%y%m%d-%H%M-%S').png\"") },  	
-	{ MODKEY,												XK_minus,      spawn,                  SHCMD("pamixer --allow-boost -d 5; kill -44 $(pidof dwmblocks)") },
-	{ MODKEY|ShiftMask,							XK_minus,      spawn,                  SHCMD("pamixer --allow-boost -d 15; kill -44 $(pidof dwmblocks)") },
-	{ MODKEY,												XK_equal,      spawn,                  SHCMD("pamixer --allow-boost -i 5; kill -44 $(pidof dwmblocks)") },
-	{ MODKEY|ShiftMask,							XK_equal,      spawn,                  SHCMD("pamixer --allow-boost -i 15; kill -44 $(pidof dwmblocks)") },
-
 	#if KEYMODES_PATCH
 	{ MODKEY,                       XK_Escape,     setkeymode,             {.ui = COMMANDMODE} },
 	#endif // KEYMODES_PATCH
@@ -1064,6 +1200,7 @@ static const Key keys[] = {
 	#endif // SHIFTSWAPTAGS_PATCH
 	#if BAR_WINTITLEACTIONS_PATCH
 	{ MODKEY|ControlMask,           XK_z,          showhideclient,         {0} },
+	{ MODKEY|ControlMask,           XK_s,          unhideall,              {0} },
 	#endif // BAR_WINTITLEACTIONS_PATCH
 	{ MODKEY|ShiftMask,             XK_c,          killclient,             {0} },
 	#if KILLUNSEL_PATCH
@@ -1074,7 +1211,7 @@ static const Key keys[] = {
 	#endif // SELFRESTART_PATCH
 	{ MODKEY|ControlMask|ShiftMask,             XK_q,          quit,                   {0} },
 	#if RESTARTSIG_PATCH
-	{ MODKEY|ShiftMask, 						XK_q,          quit,                   {1} },
+	{ MODKEY|ShiftMask, XK_q,          quit,                   {1} },
 	#endif // RESTARTSIG_PATCH
 	#if FOCUSURGENT_PATCH
 	{ MODKEY,                       XK_u,          focusurgent,            {0} },
@@ -1085,9 +1222,9 @@ static const Key keys[] = {
 	#if WINVIEW_PATCH
 	{ MODKEY,                       XK_o,          winview,                {0} },
 	#endif // WINVIEW_PATCH
-	#if XRDB_PATCH && !BAR_VTCOLORS_PATCH
+	#if XRDB_PATCH || XRESOURCES_PATCH
 	{ MODKEY|ShiftMask,             XK_F5,         xrdb,                   {.v = NULL } },
-	#endif // XRDB_PATCH
+	#endif // XRDB_PATCH | XRESOURCES_PATCH
 	{ MODKEY,                       XK_t,          setlayout,              {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,          setlayout,              {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,          setlayout,              {.v = &layouts[2]} },
@@ -1107,6 +1244,9 @@ static const Key keys[] = {
 	#endif // FLEXTILE_DELUXE_LAYOUT
 	{ MODKEY,                       XK_space,      setlayout,              {0} },
 	{ MODKEY|ShiftMask,             XK_space,      togglefloating,         {0} },
+	#if ALWAYSONTOP_PATCH
+	{ MODKEY|ShiftMask,             XK_space,      togglealwaysontop,      {0} },
+	#endif // ALWAYSONTOP_PATCH
 	#if MAXIMIZE_PATCH
 	{ MODKEY|ControlMask|ShiftMask, XK_h,          togglehorizontalmax,    {0} },
 	{ MODKEY|ControlMask|ShiftMask, XK_l,          togglehorizontalmax,    {0} },
@@ -1209,6 +1349,9 @@ static const Key keys[] = {
 	{ MODKEY|Mod1Mask,              XK_Right,      switchtag,              { .ui = SWITCHTAG_RIGHT | SWITCHTAG_TAG | SWITCHTAG_VIEW } },
 	{ MODKEY|Mod1Mask,              XK_Left,       switchtag,              { .ui = SWITCHTAG_LEFT  | SWITCHTAG_TAG | SWITCHTAG_VIEW } },
 	#endif // BAR_TAGGRID_PATCH
+	#if MOVECENTER_PATCH
+	{ MODKEY,                       XK_x,          movecenter,             {0} }, // note keybinding conflict with killunsel
+	#endif // MOVECENTER_PATCH
 	#if MOVEPLACE_PATCH
 	{ MODKEY,                       XK_KP_7,       moveplace,              {.ui = WIN_NW }},   /* XK_KP_Home,  */
 	{ MODKEY,                       XK_KP_8,       moveplace,              {.ui = WIN_N  }},   /* XK_KP_Up,    */
@@ -1469,6 +1612,9 @@ static const Signal signals[] = {
 	#if CFACTS_PATCH
 	{ "setcfact",                setcfact },
 	#endif // CFACTS_PATCH
+	#if MOVECENTER_PATCH
+	{ "movecenter",              movecenter },
+	#endif // MOVECENTER_PATCH
 	#if MOVEPLACE_PATCH
 	{ "moveplace",               moveplace },
 	#endif // MOVEPLACE_PATCH
@@ -1587,9 +1733,9 @@ static const Signal signals[] = {
 	#if WINVIEW_PATCH
 	{ "winview",                 winview },
 	#endif // WINVIEW_PATCH
-	#if XRDB_PATCH && !BAR_VTCOLORS_PATCH
+	#if XRDB_PATCH || XRESOURCES_PATCH
 	{ "xrdb",                    xrdb },
-	#endif // XRDB_PATCH
+	#endif // XRDB_PATCH | XRESOURCES_PATCH
 	#if TAGOTHERMONITOR_PATCH
 	{ "tagnextmonex",            tagnextmonex },
 	{ "tagprevmonex",            tagprevmonex },
@@ -1689,6 +1835,9 @@ static IPCCommand ipccommands[] = {
 	IPCCOMMAND( mpdchange, 1, {ARG_TYPE_SINT} ),
 	IPCCOMMAND( mpdcontrol, 1, {ARG_TYPE_NONE} ),
 	#endif // MPDCONTROL_PATCH
+	#if MOVECENTER_PATCH
+	IPCCOMMAND( movecenter, 1, {ARG_TYPE_NONE} ),
+	#endif // MOVECENTER_PATCH
 	#if MOVEPLACE_PATCH
 	IPCCOMMAND( moveplace, 1, {ARG_TYPE_UINT} ),
 	#endif // MOVEPLACE_PATCH
@@ -1787,8 +1936,8 @@ static IPCCommand ipccommands[] = {
 	#if WINVIEW_PATCH
 	IPCCOMMAND( winview, 1, {ARG_TYPE_NONE} ),
 	#endif // WINVIEW_PATCH
-	#if XRDB_PATCH && !BAR_VTCOLORS_PATCH
+	#if XRDB_PATCH || XRESOURCES_PATCH
 	IPCCOMMAND( xrdb, 1, {ARG_TYPE_NONE} ),
-	#endif // XRDB_PATCH
+	#endif // XRDB_PATCH | XRESOURCES_PATCH
 };
 #endif // IPC_PATCH
