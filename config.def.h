@@ -913,6 +913,23 @@ static const char *dmenucmd[] = {
 };
 static const char *termcmd[]  = { "st", NULL };
 
+static const char *screenshot_cmd[] = {
+    "bash",
+    "-c",
+    "f=~/screenies/$(date +\"pic-%y%m%d-%H%M-%S.png\"); "
+    "maim \"$f\" && dunstify \"Screenshot saved: $f\"",
+    NULL
+};
+
+static const char *select_screenshot_cmd[] = {
+    "bash",
+    "-c",
+    "dunstify \"Selecting area for screenshot\"; "
+    "f=~/screenies/$(date +\"pic-select-%y%m%d-%H%M-%S.png\"); "
+    "maim -s \"$f\" 2>/dev/null && dunstify \"Screenshot saved: $f\"",
+    NULL
+};
+
 #if BAR_STATUSCMD_PATCH
 #if BAR_DWMBLOCKS_PATCH
 /* This defines the name of the executable that handles the bar (used for signalling purposes) */
@@ -1045,6 +1062,8 @@ ResourcePref resources[] = {
 
 static const Key keys[] = {
 	/* modifier                     key            function                argument */
+	{ 0, XK_Print, spawn, {.v = screenshot_cmd } },
+	{ ControlMask, XK_Print, spawn, {.v = select_screenshot_cmd } },
 	#if KEYMODES_PATCH
 	{ MODKEY,                       XK_Escape,     setkeymode,             {.ui = COMMANDMODE} },
 	#endif // KEYMODES_PATCH
