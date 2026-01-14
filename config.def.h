@@ -661,15 +661,15 @@ static const int nstack      = 0;    /* number of clients in primary stack area 
 #endif // FLEXTILE_DELUXE_LAYOUT
 static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
-static const int refreshrate = 120;  /* refresh rate (per second) for client move/resize */
+static const int refreshrate = 144;  /* refresh rate (per second) for client move/resize */
 #if PLACEMOUSE_PATCH
-static const int refreshrate_placemouse = 60; /* refresh rate (per second) for placemouse */
+static const int refreshrate_placemouse = 144; /* refresh rate (per second) for placemouse */
 #endif // PLACEMOUSE_PATCH
 #if DRAGMFACT_PATCH
-static const int refreshrate_dragmfact = 40; /* refresh rate (per second) for dragmfact */
+static const int refreshrate_dragmfact = 144; /* refresh rate (per second) for dragmfact */
 #endif // DRAGMFACT_PATCH
 #if DRAGCFACT_PATCH
-static const int refreshrate_dragcfact = 60; /* refresh rate (per second) for dragcfact */
+static const int refreshrate_dragcfact = 144; /* refresh rate (per second) for dragcfact */
 #endif // DRAGCFACT_PATCH
 #if DECORATION_HINTS_PATCH
 static const int decorhints  = 1;    /* 1 means respect decoration hints */
