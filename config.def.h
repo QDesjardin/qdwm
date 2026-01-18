@@ -539,6 +539,7 @@ static const Rule rules[] = {
 static const MonitorRule monrules[] = {
 	/* monitor  tag   layout  mfact  nmaster  showbar  topbar */
 	{  1,       -1,   0,      -1,    -1,      -1,      -1     }, // use a different layout for the second monitor
+	{  -1,       5,   8,      0.8,   -1,      -1,      -1     }, // tag 5 - GIMP, centered master layout
 	{  -1,      -1,   0,      -1,    -1,      -1,      -1     }, // default
 };
 #else
