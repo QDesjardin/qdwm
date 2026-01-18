@@ -525,8 +525,8 @@ static const Rule rules[] = {
 	RULE(.wintype = WTYPE "UTILITY", .isfloating = 1)
 	RULE(.wintype = WTYPE "TOOLBAR", .isfloating = 1)
 	RULE(.wintype = WTYPE "SPLASH", .isfloating = 1)
-	RULE(.class = "Gimp", .tags = 1 << 4)
-	RULE(.class = "Firefox", .tags = 1 << 7)
+	RULE(.class = "Gimp", .tags = 1 << 4, .monitor = 0)
+	RULE(.class = "explorer.exe", .tags = 1 << 3, .monitor = 0)
 	#if RENAMED_SCRATCHPADS_PATCH
 	RULE(.instance = "spterm", .scratchkey = 's', .isfloating = 1)
 	#elif SCRATCHPADS_PATCH
@@ -538,7 +538,8 @@ static const Rule rules[] = {
 #if PERTAG_PATCH
 static const MonitorRule monrules[] = {
 	/* monitor  tag   layout  mfact  nmaster  showbar  topbar */
-	{  -1,       5,   8,      0.8,   -1,      -1,      -1     }, // tag 5 - GIMP, centered master layout
+	{   0,       5,   8,      0.8,   -1,      -1,      -1     }, // tag 5 - GIMP, centered master layout
+	{   0,       4,   2,      -1,    -1,       0,      -1     }, // tag 4 - Wine Virtual Desktop, monocle/no bar
 	{  -1,      -1,   0,      -1,    -1,      -1,      -1     }, // default
 };
 #else
