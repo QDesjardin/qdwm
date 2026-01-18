@@ -526,6 +526,7 @@ static const Rule rules[] = {
 	RULE(.wintype = WTYPE "TOOLBAR", .isfloating = 1)
 	RULE(.wintype = WTYPE "SPLASH", .isfloating = 1)
 	RULE(.class = "Gimp", .tags = 1 << 4, .monitor = 0)
+	RULE(.class = "dosbox-x", .isfloating = 1)
 	RULE(.class = "explorer.exe", .tags = 1 << 3, .monitor = 0)
 	#if RENAMED_SCRATCHPADS_PATCH
 	RULE(.instance = "spterm", .scratchkey = 's', .isfloating = 1)
