@@ -917,7 +917,7 @@ static const char *dmenucmd[] = {
 static const char *termcmd[]  = { "st", NULL };
 
 static const char *screenshot_cmd[] = {
-    "bash",
+    "sh",
     "-c",
     "f=~/screenies/$(date +\"pic-%y%m%d-%H%M-%S.png\"); "
     "maim \"$f\" && dunstify \"Screenshot saved: $f\"",
@@ -925,11 +925,18 @@ static const char *screenshot_cmd[] = {
 };
 
 static const char *select_screenshot_cmd[] = {
-    "bash",
+    "sh",
     "-c",
     "dunstify \"Selecting area for screenshot\"; "
     "f=~/screenies/$(date +\"pic-select-%y%m%d-%H%M-%S.png\"); "
     "maim -s \"$f\" 2>/dev/null && dunstify \"Screenshot saved: $f\"",
+    NULL
+};
+
+static const char *lock_cmd[] = {
+    "sh",
+    "-c",
+    "alock",
     NULL
 };
 
@@ -1067,6 +1074,7 @@ static const Key keys[] = {
 	/* modifier                     key            function                argument */
 	{ 0, XK_Print, spawn, {.v = screenshot_cmd } },
 	{ ControlMask, XK_Print, spawn, {.v = select_screenshot_cmd } },
+	{ MODKEY|ControlMask, XK_l, spawn, {.v = lock_cmd } },
 	#if KEYMODES_PATCH
 	{ MODKEY,                       XK_Escape,     setkeymode,             {.ui = COMMANDMODE} },
 	#endif // KEYMODES_PATCH
