@@ -928,7 +928,7 @@ static const char *select_screenshot_cmd[] = {
     "sh",
     "-c",
     "dunstify \"Selecting area for screenshot\"; "
-    "f=~/screenies/$(date +\"pic-select-%y%m%d-%H%M-%S.png\"); "
+    "f=~/screenies/$(date +\"pic-%y%m%d-%H%M-%S-select.png\"); "
     "maim -s \"$f\" 2>/dev/null && dunstify \"Screenshot saved: $f\"",
     NULL
 };
