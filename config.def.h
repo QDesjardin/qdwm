@@ -540,7 +540,7 @@ static const Rule rules[] = {
 #if PERTAG_PATCH
 static const MonitorRule monrules[] = {
 	/* monitor  tag   layout  mfact  nmaster  showbar  topbar */
-	{   0,       5,   8,      0.8,   -1,      -1,      -1     }, // tag 5 - GIMP, centered master layout
+	{   0,       5,   8,      0.7,   -1,      -1,      -1     }, // tag 5 - GIMP, centered master layout
 	{   0,       4,   2,      -1,    -1,       0,      -1     }, // tag 4 - Wine Virtual Desktop, monocle/no bar
 	{  -1,      -1,   0,      -1,    -1,      -1,      -1     }, // default
 };
