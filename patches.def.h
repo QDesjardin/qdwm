@@ -642,7 +642,7 @@
 /* Similarly to the dragmfact patch this allows you to click and drag clients to change the
  * cfact to adjust the client's size in the stack. This patch depends on the cfacts patch.
  */
-#define DRAGCFACT_PATCH 0
+#define DRAGCFACT_PATCH 1
 
 /* Patch that combines dragfact and dragmfact.
  */
