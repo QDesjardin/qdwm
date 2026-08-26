@@ -527,7 +527,6 @@ static const Rule rules[] = {
 	RULE(.wintype = WTYPE "SPLASH", .isfloating = 1)
 	RULE(.class = "Gimp", .tags = 1 << 4, .monitor = 0)
 	RULE(.class = "dosbox-x", .isfloating = 1)
-	RULE(.class = "explorer.exe", .tags = 1 << 3, .monitor = 0)
 	RULE(.class = "st-256color", .isterminal = 1)
 	#if RENAMED_SCRATCHPADS_PATCH
 	RULE(.instance = "spterm", .scratchkey = 's', .isfloating = 1)
@@ -1072,8 +1071,8 @@ ResourcePref resources[] = {
 
 static const Key keys[] = {
 	/* modifier                     key            function                argument */
-	{ 0, XK_Print, spawn, {.v = screenshot_cmd } },
-	{ ControlMask, XK_Print, spawn, {.v = select_screenshot_cmd } },
+	{ ControlMask, XK_Print, spawn, {.v = screenshot_cmd } },
+	{ 0, XK_Print, spawn, {.v = select_screenshot_cmd } },
 	{ MODKEY|ControlMask, XK_l, spawn, {.v = lock_cmd } },
 	#if KEYMODES_PATCH
 	{ MODKEY,                       XK_Escape,     setkeymode,             {.ui = COMMANDMODE} },
