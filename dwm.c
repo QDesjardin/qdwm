@@ -3404,7 +3404,7 @@ restack(Monitor *m)
 		#endif // FLEXTILE_DELUXE_LAYOUT
 		|| m->sel->isfloating)
 	)
-		warp(m->sel);
+	; // warp(m->sel);
 	#endif // WARP_PATCH
 }
 
