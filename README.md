@@ -66,7 +66,7 @@ Screenshot keys (need `maim` + `dunst`):
 | Super+Shift+Q | restart dwm |
 | Super+Ctrl+Shift+Q | quit |
 
-Urgent tags and urgent window borders are bright emerald `#00E08B`. The selected tag is magenta `#8B00FF`. Layout symbol chip is `#f7d092`.
+Urgent tags and urgent window borders are bright emerald `#00E08B` with black text. The selected tag is magenta `#8B00FF`. Layout symbol chip is `#f7d092`. Only the focused client in a stack is highlighted; the rest of the stack stays on the resting title colour.
 
 ---
 

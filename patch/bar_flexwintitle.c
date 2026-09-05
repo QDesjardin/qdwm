@@ -165,6 +165,20 @@ getselschemefor(int scheme)
 	return SchemeTitleSel;
 }
 
+/* Map an "active group" scheme back to the resting (inactive) one so that
+ * only the selected client in a stack is highlighted. */
+int
+getinaschemefor(int scheme)
+{
+	if (scheme == SchemeFlexActFloat || scheme == SchemeFlexSelFloat)
+		return SchemeFlexInaFloat;
+	if (scheme >= SchemeFlexSelTTB && scheme < SchemeFlexActFloat)
+		return scheme - SchemeFlexSelTTB + SchemeFlexInaTTB;
+	if (scheme >= SchemeFlexActTTB && scheme < SchemeFlexInaTTB)
+		return scheme + SchemeFlexInaTTB - SchemeFlexActTTB;
+	return scheme;
+}
+
 void
 flextitledraw(Monitor *m, Client *c, int unused, int x, int w, int tabscheme, Arg *arg, BarArg *a)
 {
@@ -201,7 +215,7 @@ flextitledraw(Monitor *m, Client *c, int unused, int x, int w, int tabscheme, Ar
 		? getselschemefor(tabscheme)
 		: c->isurgent
 		? SchemeUrg
-		: tabscheme
+		: getinaschemefor(tabscheme)
 	);
 
 	drw_setscheme(drw, scheme[clientscheme]);
