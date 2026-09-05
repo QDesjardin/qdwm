@@ -1,3 +1,72 @@
+# qdwm
+
+Queen Dairy's dwm, forked from [bakkeby/dwm-flexipatch](https://github.com/bakkeby/dwm-flexipatch). Dairy colour scheme, native bitmap fonts, and a handful of suckless.org patches that flexipatch does not ship.
+
+![qdwm and qdest](preview.png)
+
+The preview is a lossless PNG (`maim -s`) so the Dairy palette is not re-encoded.
+
+This build was put together with [Grok Build](https://grok.x.ai/) — it saved the day on font rendering, patch integration, and the colour work.
+
+**Mod key is Super (Mod4).** Edit `config.def.h` and `patches.def.h`, then `make && sudo make install`. Restart with Super+Shift+Q (keeps the session). Super+Ctrl+Shift+Q quits X.
+
+## Companion programs
+
+Install these if you want the default keybinds to actually do something:
+
+| Program | Why |
+|---|---|
+| **st** ([qdest](https://github.com/QDesjardin/qdest)) | terminal (Super+Shift+Return) |
+| **rofi** | launcher (Super+P) |
+| **maim** | screenshots → `~/screenies/` |
+| **dunst** | screenshot / selection toasts |
+| **dwmblocks** | status text on the bar |
+| **alock** | lock screen (Super+Ctrl+L) |
+| scientifica, Dina, BmPlus IBM VGA, JoyPixels | bar / dmenu / terminal / emoji |
+
+Screenshot keys (need `maim` + `dunst`):
+
+- **Print** — select a rectangle, save `~/screenies/pic-YYMMDD-HHMM-SS-select.png`
+- **Ctrl+Print** — whole screen, save `~/screenies/pic-YYMMDD-HHMM-SS.png`
+
+## Keybinds worth knowing
+
+| Keys | Action |
+|---|---|
+| Super+Shift+Return | spawn st |
+| Super+P | rofi run |
+| Super+J / K | focus next / prev |
+| Super+H / L | shrink / grow master |
+| Super+I / D | more / fewer masters |
+| Super+T / F / M | tile / float / monocle |
+| Super+Space | toggle layout |
+| Super+Shift+Space | toggle floating |
+| Super+Y | toggle fullscreen |
+| Super+Shift+F | real fullscreen |
+| Super+Shift+C | kill client |
+| Super+Ctrl+C | kill other clients on the tag |
+| Super+Q | mark client unkilleable |
+| Super+U | jump to urgent client |
+| Super+Tab | last tag |
+| Super+Shift+Tab / Super+\\ | cycle tags |
+| Super+1…9 | view tag |
+| Super+Shift+1…9 | send to tag |
+| Super+\` | scratchpad |
+| Super+B | toggle bar |
+| Super+Shift+B | bar top / bottom |
+| Super+Alt+B | toggle window border |
+| Super+Shift+A | always on top |
+| Super+C | centre floating window |
+| Super+X | transfer client master ↔ stack |
+| Super+keypad | snap float to edges |
+| Super+, / . | focus monitor |
+| Super+Shift+Q | restart dwm |
+| Super+Ctrl+Shift+Q | quit |
+
+Urgent tags and urgent window borders are bright emerald `#00E08B`. The selected tag is magenta `#8B00FF`. Layout symbol chip is `#f7d092`.
+
+---
+
 This dwm 6.8 (2bb919e, 2026-03-08) side project has a different take on dwm patching. It uses preprocessor directives to decide whether or not to include a patch during build time. Essentially this means that this build, for better or worse, contains both the patched _and_ the original code. The aim being that you can select which patches to include and the build will contain that code and nothing more. Due to the complexity of some of the patches dwm-flexipatch has diverged from mainstream dwm by making some core patches non-optional for maintenance reasons. For the classic dwm-flexipatch build refer to branch [dwm-flexipatch-1.0](https://github.com/bakkeby/dwm-flexipatch/tree/dwm-flexipatch-1.0).
 
 For example to include the `alpha` patch then you would only need to flip this setting from 0 to 1 in [patches.h](https://github.com/bakkeby/dwm-flexipatch/blob/master/patches.def.h):

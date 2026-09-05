@@ -214,14 +214,14 @@ static char hidselfgcolor[]              = "#4ED8E8";
 static char hidnormbgcolor[]             = "#070605";
 static char hidselbgcolor[]              = "#070605";
 
-static char urgfgcolor[]                 = "#F8E0D4";
-static char urgbgcolor[]                 = "#560E0E";
-static char urgbordercolor[]             = "#C41E3A";
-static char urgfloatcolor[]              = "#C41E3A";
+static char urgfgcolor[]                 = "#FFFFFF";
+static char urgbgcolor[]                 = "#00E08B";
+static char urgbordercolor[]             = "#00E08B";
+static char urgfloatcolor[]              = "#00E08B";
 
 #if BAR_LTSYMBOL_SCHEME_PATCH
 static char ltsymbolfgcolor[]            = "#070605";
-static char ltsymbolbgcolor[]            = "#CD7F32";
+static char ltsymbolbgcolor[]            = "#f7d092";
 #endif // BAR_LTSYMBOL_SCHEME_PATCH
 
 #if RENAMED_SCRATCHPADS_PATCH
@@ -237,6 +237,7 @@ static char scratchnormfloatcolor[]      = "#8B00FF";
 #endif // RENAMED_SCRATCHPADS_PATCH
 
 #if BAR_FLEXWINTITLE_PATCH
+static char flexselfgcolor[]             = "#FFFFFF"; /* white text on bright layout tabs */
 static char normTTBbgcolor[]             = "#560E0E";
 static char normLTRbgcolor[]             = "#634053";
 static char normMONObgcolor[]            = "#2F3087";
@@ -369,17 +370,17 @@ static char *colors[][ColCount] = {
 	[SchemeScratchNorm] = { scratchnormfgcolor, scratchnormbgcolor, scratchnormbordercolor, scratchnormfloatcolor },
 	#endif // RENAMED_SCRATCHPADS_PATCH
 	#if BAR_FLEXWINTITLE_PATCH
-	[SchemeFlexActTTB]   = { titleselfgcolor,  actTTBbgcolor,    actTTBbgcolor,        c000000 },
-	[SchemeFlexActLTR]   = { titleselfgcolor,  actLTRbgcolor,    actLTRbgcolor,        c000000 },
-	[SchemeFlexActMONO]  = { titleselfgcolor,  actMONObgcolor,   actMONObgcolor,       c000000 },
-	[SchemeFlexActGRID]  = { titleselfgcolor,  actGRIDbgcolor,   actGRIDbgcolor,       c000000 },
-	[SchemeFlexActGRD1]  = { titleselfgcolor,  actGRD1bgcolor,   actGRD1bgcolor,       c000000 },
-	[SchemeFlexActGRD2]  = { titleselfgcolor,  actGRD2bgcolor,   actGRD2bgcolor,       c000000 },
-	[SchemeFlexActGRDM]  = { titleselfgcolor,  actGRDMbgcolor,   actGRDMbgcolor,       c000000 },
-	[SchemeFlexActHGRD]  = { titleselfgcolor,  actHGRDbgcolor,   actHGRDbgcolor,       c000000 },
-	[SchemeFlexActDWDL]  = { titleselfgcolor,  actDWDLbgcolor,   actDWDLbgcolor,       c000000 },
-	[SchemeFlexActSPRL]  = { titleselfgcolor,  actSPRLbgcolor,   actSPRLbgcolor,       c000000 },
-	[SchemeFlexActFloat] = { titleselfgcolor,  actfloatbgcolor,  actfloatbgcolor,      c000000 },
+	[SchemeFlexActTTB]   = { flexselfgcolor,   actTTBbgcolor,    actTTBbgcolor,        c000000 },
+	[SchemeFlexActLTR]   = { flexselfgcolor,   actLTRbgcolor,    actLTRbgcolor,        c000000 },
+	[SchemeFlexActMONO]  = { flexselfgcolor,   actMONObgcolor,   actMONObgcolor,       c000000 },
+	[SchemeFlexActGRID]  = { flexselfgcolor,   actGRIDbgcolor,   actGRIDbgcolor,       c000000 },
+	[SchemeFlexActGRD1]  = { flexselfgcolor,   actGRD1bgcolor,   actGRD1bgcolor,       c000000 },
+	[SchemeFlexActGRD2]  = { flexselfgcolor,   actGRD2bgcolor,   actGRD2bgcolor,       c000000 },
+	[SchemeFlexActGRDM]  = { flexselfgcolor,   actGRDMbgcolor,   actGRDMbgcolor,       c000000 },
+	[SchemeFlexActHGRD]  = { flexselfgcolor,   actHGRDbgcolor,   actHGRDbgcolor,       c000000 },
+	[SchemeFlexActDWDL]  = { flexselfgcolor,   actDWDLbgcolor,   actDWDLbgcolor,       c000000 },
+	[SchemeFlexActSPRL]  = { flexselfgcolor,   actSPRLbgcolor,   actSPRLbgcolor,       c000000 },
+	[SchemeFlexActFloat] = { flexselfgcolor,   actfloatbgcolor,  actfloatbgcolor,      c000000 },
 	[SchemeFlexInaTTB]   = { titlenormfgcolor, normTTBbgcolor,   normTTBbgcolor,       c000000 },
 	[SchemeFlexInaLTR]   = { titlenormfgcolor, normLTRbgcolor,   normLTRbgcolor,       c000000 },
 	[SchemeFlexInaMONO]  = { titlenormfgcolor, normMONObgcolor,  normMONObgcolor,      c000000 },
@@ -391,17 +392,17 @@ static char *colors[][ColCount] = {
 	[SchemeFlexInaDWDL]  = { titlenormfgcolor, normDWDLbgcolor,  normDWDLbgcolor,      c000000 },
 	[SchemeFlexInaSPRL]  = { titlenormfgcolor, normSPRLbgcolor,  normSPRLbgcolor,      c000000 },
 	[SchemeFlexInaFloat] = { titlenormfgcolor, normfloatbgcolor, normfloatbgcolor,     c000000 },
-	[SchemeFlexSelTTB]   = { titleselfgcolor,  selTTBbgcolor,    selTTBbgcolor,        c000000 },
-	[SchemeFlexSelLTR]   = { titleselfgcolor,  selLTRbgcolor,    selLTRbgcolor,        c000000 },
-	[SchemeFlexSelMONO]  = { titleselfgcolor,  selMONObgcolor,   selMONObgcolor,       c000000 },
-	[SchemeFlexSelGRID]  = { titleselfgcolor,  selGRIDbgcolor,   selGRIDbgcolor,       c000000 },
-	[SchemeFlexSelGRD1]  = { titleselfgcolor,  selGRD1bgcolor,   selGRD1bgcolor,       c000000 },
-	[SchemeFlexSelGRD2]  = { titleselfgcolor,  selGRD2bgcolor,   selGRD2bgcolor,       c000000 },
-	[SchemeFlexSelGRDM]  = { titleselfgcolor,  selGRDMbgcolor,   selGRDMbgcolor,       c000000 },
-	[SchemeFlexSelHGRD]  = { titleselfgcolor,  selHGRDbgcolor,   selHGRDbgcolor,       c000000 },
-	[SchemeFlexSelDWDL]  = { titleselfgcolor,  selDWDLbgcolor,   selDWDLbgcolor,       c000000 },
-	[SchemeFlexSelSPRL]  = { titleselfgcolor,  selSPRLbgcolor,   selSPRLbgcolor,       c000000 },
-	[SchemeFlexSelFloat] = { titleselfgcolor,  selfloatbgcolor,  selfloatbgcolor,      c000000 },
+	[SchemeFlexSelTTB]   = { flexselfgcolor,   selTTBbgcolor,    selTTBbgcolor,        c000000 },
+	[SchemeFlexSelLTR]   = { flexselfgcolor,   selLTRbgcolor,    selLTRbgcolor,       c000000 },
+	[SchemeFlexSelMONO]  = { flexselfgcolor,   selMONObgcolor,   selMONObgcolor,       c000000 },
+	[SchemeFlexSelGRID]  = { flexselfgcolor,   selGRIDbgcolor,   selGRIDbgcolor,       c000000 },
+	[SchemeFlexSelGRD1]  = { flexselfgcolor,   selGRD1bgcolor,   selGRD1bgcolor,       c000000 },
+	[SchemeFlexSelGRD2]  = { flexselfgcolor,   selGRD2bgcolor,   selGRD2bgcolor,       c000000 },
+	[SchemeFlexSelGRDM]  = { flexselfgcolor,   selGRDMbgcolor,   selGRDMbgcolor,       c000000 },
+	[SchemeFlexSelHGRD]  = { flexselfgcolor,   selHGRDbgcolor,   selHGRDbgcolor,       c000000 },
+	[SchemeFlexSelDWDL]  = { flexselfgcolor,   selDWDLbgcolor,   selDWDLbgcolor,       c000000 },
+	[SchemeFlexSelSPRL]  = { flexselfgcolor,   selSPRLbgcolor,   selSPRLbgcolor,       c000000 },
+	[SchemeFlexSelFloat] = { flexselfgcolor,   selfloatbgcolor,  selfloatbgcolor,      c000000 },
 	#endif // BAR_FLEXWINTITLE_PATCH
 };
 
