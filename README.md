@@ -47,10 +47,11 @@ Screenshot keys (need `maim` + `dunst`):
 | Super+Ctrl+C | kill other clients on the tag |
 | Super+Q | mark client unkilleable |
 | Super+U | jump to urgent client |
+| Super+1…9 | **view tag** (which windows are visible) |
+| Super+Shift+1…9 | **send focused window to that tag** |
+| Super+Ctrl+1…9 | toggle whether this tag is in the current view |
 | Super+Tab | last tag |
 | Super+Shift+Tab / Super+\\ | cycle tags |
-| Super+1…9 | view tag |
-| Super+Shift+1…9 | send to tag |
 | Super+\` | scratchpad |
 | Super+B | toggle bar |
 | Super+Shift+B | bar top / bottom |
