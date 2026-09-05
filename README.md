@@ -2,6 +2,8 @@
 
 Queen Dairy's dwm, forked from [bakkeby/dwm-flexipatch](https://github.com/bakkeby/dwm-flexipatch). Dairy colour scheme, native bitmap fonts, and a handful of suckless.org patches that flexipatch does not ship.
 
+More of the same world: [queendairy.com](https://queendairy.com/) · [projects](https://queendairy.com/projects/) · [Dairy colour](https://queendairy.com/projects/dairy_colour/) · companion terminal [qdest](https://github.com/QDesjardin/qdest).
+
 ![qdwm and qdest](preview.png)
 
 The preview is a lossless PNG (`maim -s`) so the Dairy palette is not re-encoded.
