@@ -2,12 +2,12 @@ void
 transfer(const Arg *arg)
 {
 	Client *c, *mtail = selmon->clients, *stail = NULL, *insertafter;
-	int transfertostack = 0, i, nmasterclients;
+	int transfertostack = 0, i;
 
 	for (i = 0, c = selmon->clients; c; c = c->next) {
 		if (!ISVISIBLE(c) || c->isfloating) continue;
 		if (selmon->sel == c) { transfertostack = i < selmon->nmaster && selmon->nmaster != 0; }
-		if (i < selmon->nmaster) { nmasterclients++; mtail = c; }
+		if (i < selmon->nmaster) { mtail = c; }
 		stail = c;
 		i++;
 	}

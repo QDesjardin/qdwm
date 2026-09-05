@@ -18,6 +18,9 @@ static const unsigned int borderpx       = 1;   /* border pixel of windows */
 static const unsigned int barborderpx    = 0;  /* border pixel of bar */
 #endif // BAR_BORDER_PATCH
 static const unsigned int snap           = 32;  /* snap pixel */
+#if ALLOWKILLRULE_PATCH
+static const int allowkill               = 1;   /* 1: clients are killable unless a rule sets otherwise */
+#endif // ALLOWKILLRULE_PATCH
 #if SWALLOW_PATCH
 static const int swallowfloating         = 1;   /* 1 means swallow floating windows by default */
 #endif // SWALLOW_PATCH
@@ -41,7 +44,7 @@ static const char dwmdir[]               = "dwm";
 static const char localshare[]           = ".local/share";
 #endif // AUTOSTART_PATCH
 #if BAR_ANYBAR_PATCH
-static const int usealtbar               = 1;        /* 1 means use non-dwm status bar */
+static const int usealtbar               = 0;        /* 1 means use non-dwm status bar */
 static const char *altbarclass           = "Polybar"; /* Alternate bar class name */
 static const char *altbarcmd             = "$HOME/bar.sh"; /* Alternate bar launch command */
 #endif // BAR_ANYBAR_PATCH
@@ -67,8 +70,8 @@ static const int vertpad                 = 10;  /* vertical padding of bar */
 static const int sidepad                 = 10;  /* horizontal padding of bar */
 #endif // BAR_PADDING_PATCH
 #if BAR_WINICON_PATCH
-#define ICONSIZE 20    /* icon size */
-#define ICONSPACING 5  /* space between icon and title */
+#define ICONSIZE 12    /* icon size */
+#define ICONSPACING 4  /* space between icon and title */
 #endif // BAR_WINICON_PATCH
 #if FOCUSONCLICK_PATCH
 static const int focusonwheel            = 0;
@@ -110,10 +113,11 @@ static const char etagf[] = "[%s]";             /* format of an empty tag */
 static const int lcaselbl = 0;                  /* 1 means make tag label lowercase */
 #endif // BAR_TAGLABELS_PATCH
 #if BAR_UNDERLINETAGS_PATCH
-static const unsigned int ulinepad = 5;         /* horizontal padding between the underline and tag */
-static const unsigned int ulinestroke  = 2;     /* thickness / height of the underline */
+static const unsigned int ulinepad = 3;         /* horizontal padding between the underline and tag */
+static const unsigned int ulinestroke  = 1;     /* thickness / height of the underline */
 static const unsigned int ulinevoffset = 0;     /* how far above the bottom of the bar the line should appear */
 static const int ulineall = 0;                  /* 1 to show underline on all tags, 0 for just the active ones */
+static const int ulinetop = 0;                  /* 1 to draw the line above the tags */
 #endif // BAR_UNDERLINETAGS_PATCH
 
 #if NAMETAG_PATCH
@@ -169,31 +173,31 @@ static void (*bartabmonfns[])(Monitor *) = { NULL /* , customlayoutfn */ };
 #if BAR_PANGO_PATCH
 static const char font[]                 = "monospace 10";
 #else
-static const char *fonts[]               = { "scientifica:size=8", "JoyPixels:pixelsize=10:antialias=true:autohint=true" };
+static const char *fonts[]               = { "scientifica:pixelsize=11:antialias=false:autohint=false", "JoyPixels:pixelsize=11:antialias=true:autohint=true" };
 #endif // BAR_PANGO_PATCH
-static const char dmenufont[]            = "dina:size=9";
+static const char dmenufont[]            = "dina:pixelsize=12:antialias=false:autohint=false";
 
 static char c000000[]                    = "#000000"; // placeholder value
 
 static char normfgcolor[]                = "#F8E0D4";
 static char normbgcolor[]                = "#070605";
-static char normbordercolor[]            = "#444444";
+static char normbordercolor[]            = "#634053";
 static char normfloatcolor[]             = "#8B00FF";
 
-static char selfgcolor[]                 = "#eeeeee";
-static char selbgcolor[]                 = "#005577";
-static char selbordercolor[]             = "#005577";
-static char selfloatcolor[]              = "#005577";
+static char selfgcolor[]                 = "#F8E0D4";
+static char selbgcolor[]                 = "#8B00FF";
+static char selbordercolor[]             = "#8B00FF";
+static char selfloatcolor[]              = "#FF1493";
 
-static char titlenormfgcolor[]           = "#bbbbbb";
-static char titlenormbgcolor[]           = "#222222";
-static char titlenormbordercolor[]       = "#444444";
-static char titlenormfloatcolor[]        = "#db8fd9";
+static char titlenormfgcolor[]           = "#F8E0D4";
+static char titlenormbgcolor[]           = "#070605";
+static char titlenormbordercolor[]       = "#634053";
+static char titlenormfloatcolor[]        = "#8B00FF";
 
-static char titleselfgcolor[]            = "#eeeeee";
-static char titleselbgcolor[]            = "#005577";
-static char titleselbordercolor[]        = "#005577";
-static char titleselfloatcolor[]         = "#005577";
+static char titleselfgcolor[]            = "#F8E0D4";
+static char titleselbgcolor[]            = "#8B00FF";
+static char titleselbordercolor[]        = "#8B00FF";
+static char titleselfloatcolor[]         = "#FF1493";
 
 static char tagsnormfgcolor[]            = "#F8E0D4";
 static char tagsnormbgcolor[]            = "#070605";
@@ -202,70 +206,70 @@ static char tagsnormfloatcolor[]         = "#8B00FF";
 
 static char tagsselfgcolor[]             = "#F8E0D4";
 static char tagsselbgcolor[]             = "#8B00FF";
-static char tagsselbordercolor[]         = "#005577";
-static char tagsselfloatcolor[]          = "#005577";
+static char tagsselbordercolor[]         = "#8B00FF";
+static char tagsselfloatcolor[]          = "#FF1493";
 
-static char hidnormfgcolor[]             = "#005577";
-static char hidselfgcolor[]              = "#227799";
-static char hidnormbgcolor[]             = "#222222";
-static char hidselbgcolor[]              = "#222222";
+static char hidnormfgcolor[]             = "#1A6B7A";
+static char hidselfgcolor[]              = "#4ED8E8";
+static char hidnormbgcolor[]             = "#070605";
+static char hidselbgcolor[]              = "#070605";
 
-static char urgfgcolor[]                 = "#bbbbbb";
-static char urgbgcolor[]                 = "#222222";
-static char urgbordercolor[]             = "#ff0000";
-static char urgfloatcolor[]              = "#db8fd9";
+static char urgfgcolor[]                 = "#F8E0D4";
+static char urgbgcolor[]                 = "#560E0E";
+static char urgbordercolor[]             = "#C41E3A";
+static char urgfloatcolor[]              = "#C41E3A";
 
 #if BAR_LTSYMBOL_SCHEME_PATCH
-static char ltsymbolfgcolor[]            = "#222222";
-static char ltsymbolbgcolor[]            = "#fe9877";
+static char ltsymbolfgcolor[]            = "#070605";
+static char ltsymbolbgcolor[]            = "#CD7F32";
 #endif // BAR_LTSYMBOL_SCHEME_PATCH
 
 #if RENAMED_SCRATCHPADS_PATCH
-static char scratchselfgcolor[]          = "#FFF7D4";
-static char scratchselbgcolor[]          = "#77547E";
-static char scratchselbordercolor[]      = "#894B9F";
-static char scratchselfloatcolor[]       = "#894B9F";
+static char scratchselfgcolor[]          = "#F8E0D4";
+static char scratchselbgcolor[]          = "#8B00FF";
+static char scratchselbordercolor[]      = "#FF1493";
+static char scratchselfloatcolor[]       = "#FF1493";
 
-static char scratchnormfgcolor[]         = "#FFF7D4";
-static char scratchnormbgcolor[]         = "#664C67";
-static char scratchnormbordercolor[]     = "#77547E";
-static char scratchnormfloatcolor[]      = "#77547E";
+static char scratchnormfgcolor[]         = "#F8E0D4";
+static char scratchnormbgcolor[]         = "#634053";
+static char scratchnormbordercolor[]     = "#8B00FF";
+static char scratchnormfloatcolor[]      = "#8B00FF";
 #endif // RENAMED_SCRATCHPADS_PATCH
 
 #if BAR_FLEXWINTITLE_PATCH
-static char normTTBbgcolor[]             = "#330000";
-static char normLTRbgcolor[]             = "#330033";
-static char normMONObgcolor[]            = "#000033";
-static char normGRIDbgcolor[]            = "#003300";
-static char normGRD1bgcolor[]            = "#003300";
-static char normGRD2bgcolor[]            = "#003300";
-static char normGRDMbgcolor[]            = "#506600";
-static char normHGRDbgcolor[]            = "#b96600";
-static char normDWDLbgcolor[]            = "#003333";
-static char normSPRLbgcolor[]            = "#333300";
-static char normfloatbgcolor[]           = "#115577";
-static char actTTBbgcolor[]              = "#440000";
-static char actLTRbgcolor[]              = "#440044";
-static char actMONObgcolor[]             = "#000044";
-static char actGRIDbgcolor[]             = "#004400";
-static char actGRD1bgcolor[]             = "#004400";
-static char actGRD2bgcolor[]             = "#004400";
-static char actGRDMbgcolor[]             = "#507711";
-static char actHGRDbgcolor[]             = "#b97711";
-static char actDWDLbgcolor[]             = "#004444";
-static char actSPRLbgcolor[]             = "#444400";
-static char actfloatbgcolor[]            = "#116688";
-static char selTTBbgcolor[]              = "#550000";
-static char selLTRbgcolor[]              = "#550055";
-static char selMONObgcolor[]             = "#212171";
-static char selGRIDbgcolor[]             = "#005500";
-static char selGRD1bgcolor[]             = "#005500";
-static char selGRD2bgcolor[]             = "#005500";
-static char selGRDMbgcolor[]             = "#508822";
-static char selHGRDbgcolor[]             = "#b98822";
-static char selDWDLbgcolor[]             = "#005555";
-static char selSPRLbgcolor[]             = "#555500";
-static char selfloatbgcolor[]            = "#117799";
+static char normTTBbgcolor[]             = "#560E0E";
+static char normLTRbgcolor[]             = "#634053";
+static char normMONObgcolor[]            = "#2F3087";
+static char normGRIDbgcolor[]            = "#00543F";
+static char normGRD1bgcolor[]            = "#00543F";
+static char normGRD2bgcolor[]            = "#00543F";
+static char normGRDMbgcolor[]            = "#1A6B7A";
+static char normHGRDbgcolor[]            = "#CD7F32";
+static char normDWDLbgcolor[]            = "#1A6B7A";
+static char normSPRLbgcolor[]            = "#634053";
+static char normfloatbgcolor[]           = "#2F3087";
+static char actTTBbgcolor[]              = "#C41E3A";
+static char actLTRbgcolor[]              = "#8B00FF";
+static char actMONObgcolor[]             = "#183EFA";
+static char actGRIDbgcolor[]             = "#1CEA7C";
+static char actGRD1bgcolor[]             = "#1CEA7C";
+static char actGRD2bgcolor[]             = "#1CEA7C";
+static char actGRDMbgcolor[]             = "#4ED8E8";
+static char actHGRDbgcolor[]             = "#FFD700";
+static char actDWDLbgcolor[]             = "#4ED8E8";
+static char actSPRLbgcolor[]             = "#8B00FF";
+static char actfloatbgcolor[]            = "#183EFA";
+static char selTTBbgcolor[]              = "#C41E3A";
+static char selLTRbgcolor[]              = "#8B00FF";
+static char selMONObgcolor[]             = "#183EFA";
+static char selGRIDbgcolor[]             = "#1CEA7C";
+static char selGRD1bgcolor[]             = "#1CEA7C";
+static char selGRD2bgcolor[]             = "#1CEA7C";
+static char selGRDMbgcolor[]             = "#4ED8E8";
+static char selHGRDbgcolor[]             = "#FFD700";
+static char selDWDLbgcolor[]             = "#4ED8E8";
+static char selSPRLbgcolor[]             = "#FF1493";
+static char selfloatbgcolor[]            = "#FF1493";
 #endif // BAR_FLEXWINTITLE_PATCH
 
 #if BAR_ALPHA_PATCH
@@ -1087,6 +1091,9 @@ static const Key keys[] = {
 	#if TOGGLETOPBAR_PATCH
 	{ MODKEY|ShiftMask,             XK_b,          toggletopbar,           {0} },
 	#endif // TOGGLETOPBAR_PATCH
+	#if TOGGLEBORDER_PATCH
+	{ MODKEY|Mod1Mask,              XK_b,          toggleborder,           {0} },
+	#endif // TOGGLEBORDER_PATCH
 	#if TAB_PATCH
 	{ MODKEY|ControlMask,           XK_b,          tabmode,                {-1} },
 	#endif // TAB_PATCH
@@ -1134,6 +1141,9 @@ static const Key keys[] = {
 	#endif // PUSH_PATCH / PUSH_NO_MASTER_PATCH
 	{ MODKEY,                       XK_i,          incnmaster,             {.i = +1 } },
 	{ MODKEY,                       XK_d,          incnmaster,             {.i = -1 } },
+	#if RESETNMASTER_PATCH
+	{ MODKEY|ControlMask,           XK_d,          resetnmaster,           {0} },
+	#endif // RESETNMASTER_PATCH
 	#if FLEXTILE_DELUXE_LAYOUT
 	{ MODKEY|ControlMask,           XK_i,          incnstack,              {.i = +1 } },
 	{ MODKEY|ControlMask,           XK_u,          incnstack,              {.i = -1 } },
@@ -1231,6 +1241,13 @@ static const Key keys[] = {
 	{ MODKEY|ControlMask,           XK_s,          unhideall,              {0} },
 	#endif // BAR_WINTITLEACTIONS_PATCH
 	{ MODKEY|ShiftMask,             XK_c,          killclient,             {0} },
+	#if BULKILL_PATCH
+	{ MODKEY|ControlMask,           XK_c,          bulkill,                {.ui = 1} },
+	{ MODKEY|ControlMask|ShiftMask, XK_c,          bulkill,                {.ui = 2} },
+	#endif // BULKILL_PATCH
+	#if ALLOWKILLRULE_PATCH
+	{ MODKEY,                       XK_q,          toggleallowkill,        {0} },
+	#endif // ALLOWKILLRULE_PATCH
 	#if KILLUNSEL_PATCH
 	{ MODKEY|ShiftMask,             XK_x,          killunsel,              {0} },
 	#endif // KILLUNSEL_PATCH
@@ -1273,7 +1290,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_space,      setlayout,              {0} },
 	{ MODKEY|ShiftMask,             XK_space,      togglefloating,         {0} },
 	#if ALWAYSONTOP_PATCH
-	{ MODKEY|ShiftMask,             XK_space,      togglealwaysontop,      {0} },
+	{ MODKEY|ShiftMask,             XK_a,          togglealwaysontop,      {0} },
 	#endif // ALWAYSONTOP_PATCH
 	#if MAXIMIZE_PATCH
 	{ MODKEY|ControlMask|ShiftMask, XK_h,          togglehorizontalmax,    {0} },
@@ -1325,6 +1342,17 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_period,     focusmon,               {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,      tagmon,                 {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period,     tagmon,                 {.i = +1 } },
+	#if MOVETOEDGE_PATCH
+	{ MODKEY,                       XK_KP_End,     movetoedge,             {.v = "-1 1" } },
+	{ MODKEY,                       XK_KP_Down,    movetoedge,             {.v = "0 1" } },
+	{ MODKEY,                       XK_KP_Next,    movetoedge,             {.v = "1 1" } },
+	{ MODKEY,                       XK_KP_Left,    movetoedge,             {.v = "-1 0" } },
+	{ MODKEY,                       XK_KP_Begin,   movetoedge,             {.v = "0 0" } },
+	{ MODKEY,                       XK_KP_Right,   movetoedge,             {.v = "1 0" } },
+	{ MODKEY,                       XK_KP_Home,    movetoedge,             {.v = "-1 -1" } },
+	{ MODKEY,                       XK_KP_Up,      movetoedge,             {.v = "0 -1" } },
+	{ MODKEY,                       XK_KP_Prior,   movetoedge,             {.v = "1 -1" } },
+	#endif // MOVETOEDGE_PATCH
 	#if FOCUSADJACENTTAG_PATCH
 	{ MODKEY,                       XK_Left,       viewtoleft,             {0} }, // note keybinding conflict with focusdir
 	{ MODKEY,                       XK_Right,      viewtoright,            {0} }, // note keybinding conflict with focusdir
@@ -1378,7 +1406,7 @@ static const Key keys[] = {
 	{ MODKEY|Mod1Mask,              XK_Left,       switchtag,              { .ui = SWITCHTAG_LEFT  | SWITCHTAG_TAG | SWITCHTAG_VIEW } },
 	#endif // BAR_TAGGRID_PATCH
 	#if MOVECENTER_PATCH
-	{ MODKEY,                       XK_x,          movecenter,             {0} }, // note keybinding conflict with killunsel
+	{ MODKEY,                       XK_c,          movecenter,             {0} }, /* was XK_x; that collided with transfer */
 	#endif // MOVECENTER_PATCH
 	#if MOVEPLACE_PATCH
 	{ MODKEY,                       XK_KP_7,       moveplace,              {.ui = WIN_NW }},   /* XK_KP_Home,  */

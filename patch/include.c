@@ -337,6 +337,24 @@
 #if TOGGLEFULLSCREEN_PATCH
 #include "togglefullscreen.c"
 #endif
+#if TOGGLEBORDER_PATCH
+#include "toggleborder.c"
+#endif
+#if RESETNMASTER_PATCH
+#include "resetnmaster.c"
+#endif
+#if MOVETOEDGE_PATCH
+#include "movetoedge.c"
+#endif
+#if BULKILL_PATCH
+#include "bulkill.c"
+#endif
+#if ALLOWKILLRULE_PATCH
+#include "allowkillrule.c"
+#endif
+#if SPAWN_WINDOW_CWD_PATCH
+#include "spawn_window_cwd.c"
+#endif
 #if TOGGLETOPBAR_PATCH
 #include "toggletopbar.c"
 #endif

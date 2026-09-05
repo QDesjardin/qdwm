@@ -188,7 +188,7 @@
 /* This patch underlines the selected tag, or optionally all tags.
  * https://dwm.suckless.org/patches/underlinetags/
  */
-#define BAR_UNDERLINETAGS_PATCH 0
+#define BAR_UNDERLINETAGS_PATCH 1
 
 /* This patch adds the window icon next to the window title in the bar.
  *
@@ -832,7 +832,7 @@
  * in such scenarios the previous window loses fullscreen.
  * https://github.com/bakkeby/patches/blob/master/dwm/dwm-losefullscreen-6.2.diff
  */
-#define LOSEFULLSCREEN_PATCH 0
+#define LOSEFULLSCREEN_PATCH 1
 
 /* This patch adds helper functions for maximizing, horizontally and vertically, floating
  * windows using keybindings.
@@ -1130,7 +1130,7 @@
 /* Floating windows being sent to another monitor will be centered.
  * https://dwm.suckless.org/patches/sendmoncenter/
  */
-#define SENDMON_CENTER_PATCH 0
+#define SENDMON_CENTER_PATCH 1
 
 /* This patch allow clients to keep focus when being sent to another monitor.
  * https://github.com/bakkeby/patches/blob/master/dwm/dwm-sendmon_keepfocus-6.2.diff
@@ -1169,12 +1169,12 @@
 /* This patch adds keybindings for left and right circular shift through tags.
  * https://github.com/chau-bao-long/dotfiles/blob/master/suckless/dwm/shiftview.diff
  */
-#define SHIFTVIEW_PATCH 0
+#define SHIFTVIEW_PATCH 1
 
 /* This variant of the shiftview patch adds left and right circular shift through tags,
  * but skips tags where there are no clients.
  */
-#define SHIFTVIEW_CLIENTS_PATCH 0
+#define SHIFTVIEW_CLIENTS_PATCH 1
 
 /* This patch makes dwm obey even "soft" sizehints for new clients. Any window
  * that requests a specific initial size will be floated and set to that size.
@@ -1218,6 +1218,39 @@
  * https://dwm.suckless.org/patches/spawn_cwd/
  */
 #define SPAWNCMD_PATCH 1
+
+/* Improved spawn_cwd: resolve cwd from the focused client's PID / newest child
+ * via /proc instead of parsing the window title (which truncates long paths).
+ * Takes precedence over SPAWNCMD_PATCH's title parser.
+ * https://dwm.suckless.org/patches/spawn_window_cwd/
+ */
+#define SPAWN_WINDOW_CWD_PATCH 1
+
+/* Per-client rule and toggle to allow or deny killclient (default: allowed).
+ * https://dwm.suckless.org/patches/allowkillrule/
+ */
+#define ALLOWKILLRULE_PATCH 1
+
+/* Kill other / all clients on the current tag.
+ * Super+Ctrl+c = others, Super+Ctrl+Shift+c = all.
+ * https://dwm.suckless.org/patches/bulkill/
+ */
+#define BULKILL_PATCH 1
+
+/* Snap a floating window to monitor edges / centre via keypad.
+ * https://dwm.suckless.org/patches/movetoedge/
+ */
+#define MOVETOEDGE_PATCH 1
+
+/* Toggle the selected client's border on/off.
+ * https://dwm.suckless.org/patches/toggleborder/
+ */
+#define TOGGLEBORDER_PATCH 1
+
+/* Reset nmaster to 1 (pertag-aware).
+ * https://dwm.suckless.org/patches/resetnmaster/
+ */
+#define RESETNMASTER_PATCH 1
 
 /* This patch provides comprehensive utilities for managing the client stack, providing
  * keyboard shortcuts for focusing or placing a client at specific positions in the stack.
@@ -1369,12 +1402,12 @@
 /* This patch allows you to toggle fullscreen on and off using a single shortcut key.
  * https://github.com/bakkeby/patches/blob/master/dwm/dwm-togglefullscreen-6.2.diff
  */
-#define TOGGLEFULLSCREEN_PATCH 0
+#define TOGGLEFULLSCREEN_PATCH 1
 
 /* This patch allows for the bar position (top or bottom) to be toggled during runtime.
  * https://dwm.suckless.org/patches/toggletopbar/
  */
-#define TOGGLETOPBAR_PATCH 0
+#define TOGGLETOPBAR_PATCH 1
 
 /* Minor patch that lets you use the same keyboard shortcut to toggle to the previous layout if the
  * designated layout is already active.

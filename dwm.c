@@ -69,6 +69,9 @@
 #include <sys/stat.h>
 #define SPAWN_CWD_DELIM " []{}()<>\"':"
 #endif // SPAWNCMD_PATCH
+#if SPAWN_WINDOW_CWD_PATCH
+#include <limits.h>
+#endif // SPAWN_WINDOW_CWD_PATCH
 
 /* macros */
 #define Button6                 6
@@ -413,6 +416,9 @@ struct Client {
 	#if STICKY_PATCH
 	int issticky;
 	#endif // STICKY_PATCH
+	#if ALLOWKILLRULE_PATCH
+	int allowkill;
+	#endif // ALLOWKILLRULE_PATCH
 	Client *next;
 	Client *snext;
 	#if SWALLOW_PATCH
@@ -597,9 +603,20 @@ typedef struct {
 	#if GAMES_PATCH
 	int isgame;
 	#endif // GAMES_PATCH
+	#if ALLOWKILLRULE_PATCH
+	int allowkill;
+	#endif // ALLOWKILLRULE_PATCH
 } Rule;
 
-#if BORDER_RULE_PATCH && XKB_PATCH
+#if ALLOWKILLRULE_PATCH && BORDER_RULE_PATCH && XKB_PATCH
+#define RULE(...) { .monitor = -1, .xkb_layout = -1, .bw = -1, .allowkill = -1, __VA_ARGS__ },
+#elif ALLOWKILLRULE_PATCH && XKB_PATCH
+#define RULE(...) { .monitor = -1, .xkb_layout = -1, .allowkill = -1, __VA_ARGS__ },
+#elif ALLOWKILLRULE_PATCH && BORDER_RULE_PATCH
+#define RULE(...) { .monitor = -1, .bw = -1, .allowkill = -1, __VA_ARGS__ },
+#elif ALLOWKILLRULE_PATCH
+#define RULE(...) { .monitor = -1, .allowkill = -1, __VA_ARGS__ },
+#elif BORDER_RULE_PATCH && XKB_PATCH
 #define RULE(...) { .monitor = -1, .xkb_layout = -1, .bw = -1, __VA_ARGS__ },
 #elif XKB_PATCH
 #define RULE(...) { .monitor = -1, .xkb_layout = -1, __VA_ARGS__ },
@@ -916,6 +933,9 @@ applyrules(Client *c)
 	#endif // SIZEHINTS_ISFREESIZE_PATCH
 	c->isfloating = 0;
 	c->tags = 0;
+	#if ALLOWKILLRULE_PATCH
+	c->allowkill = allowkill;
+	#endif // ALLOWKILLRULE_PATCH
 	#if RENAMED_SCRATCHPADS_PATCH
 	c->scratchkey = 0;
 	#endif // RENAMED_SCRATCHPADS_PATCH
@@ -967,6 +987,10 @@ applyrules(Client *c)
 			#endif // SIZEHINTS_ISFREESIZE_PATCH
 			c->isfloating = r->isfloating;
 			c->tags |= r->tags;
+			#if ALLOWKILLRULE_PATCH
+			if (r->allowkill >= 0)
+				c->allowkill = r->allowkill;
+			#endif // ALLOWKILLRULE_PATCH
 			#if RENAMED_SCRATCHPADS_PATCH
 			c->scratchkey = r->scratchkey;
 			#elif SCRATCHPADS_PATCH
@@ -2543,6 +2567,10 @@ killclient(const Arg *arg)
 	if (!selmon->sel)
 	#endif // ISPERMANENT_PATCH
 		return;
+	#if ALLOWKILLRULE_PATCH
+	if (!selmon->sel->allowkill)
+		return;
+	#endif // ALLOWKILLRULE_PATCH
 	#if BAR_SYSTRAY_PATCH
 	if (!sendevent(selmon->sel->win, wmatom[WMDelete], NoEventMask, wmatom[WMDelete], CurrentTime, 0, 0, 0))
 	#else
@@ -4301,7 +4329,13 @@ spawn(const Arg *arg)
 				exit(EXIT_SUCCESS);
 		}
 		#endif // BAR_STATUSCMD_PATCH | BAR_DWMBLOCKS_PATCH
-		#if SPAWNCMD_PATCH
+		#if SPAWN_WINDOW_CWD_PATCH
+		{
+			char cwd[PATH_MAX];
+			if (getwincwd(cwd, sizeof cwd) == 0)
+				chdir(cwd);
+		}
+		#elif SPAWNCMD_PATCH
 		if (selmon->sel) {
 			const char* const home = getenv("HOME");
 			assert(home && strchr(home, '/'));

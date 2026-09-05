@@ -339,6 +339,21 @@
 #if TOGGLEFULLSCREEN_PATCH
 #include "togglefullscreen.h"
 #endif
+#if TOGGLEBORDER_PATCH
+#include "toggleborder.h"
+#endif
+#if RESETNMASTER_PATCH
+#include "resetnmaster.h"
+#endif
+#if MOVETOEDGE_PATCH
+#include "movetoedge.h"
+#endif
+#if BULKILL_PATCH
+#include "bulkill.h"
+#endif
+#if ALLOWKILLRULE_PATCH
+#include "allowkillrule.h"
+#endif
 #if TOGGLETOPBAR_PATCH
 #include "toggletopbar.h"
 #endif
