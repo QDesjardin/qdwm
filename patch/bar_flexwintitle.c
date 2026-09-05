@@ -200,21 +200,20 @@ flextitledraw(Monitor *m, Client *c, int unused, int x, int w, int tabscheme, Ar
 	int tw = w;
 
 	int clientscheme = (
+		c->isurgent
+		? SchemeUrg
 		#if RENAMED_SCRATCHPADS_PATCH
-		c->scratchkey != 0 && c == selmon->sel
+		: c->scratchkey != 0 && c == selmon->sel
 		? SchemeScratchSel
 		: c->scratchkey != 0
 		? SchemeScratchNorm
-		:
 		#endif // RENAMED_SCRATCHPADS_PATCH
-		c == selmon->sel && HIDDEN(c)
+		: c == selmon->sel && HIDDEN(c)
 		? SchemeHidSel
 		: HIDDEN(c)
 		? SchemeHidNorm
 		: c == selmon->sel
 		? getselschemefor(tabscheme)
-		: c->isurgent
-		? SchemeUrg
 		: getinaschemefor(tabscheme)
 	);
 

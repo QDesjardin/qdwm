@@ -194,7 +194,7 @@ static char titlenormbgcolor[]           = "#070605";
 static char titlenormbordercolor[]       = "#634053";
 static char titlenormfloatcolor[]        = "#8B00FF";
 
-static char titleselfgcolor[]            = "#F8E0D4";
+static char titleselfgcolor[]            = "#FFFFFF"; /* focused window title */
 static char titleselbgcolor[]            = "#8B00FF";
 static char titleselbordercolor[]        = "#8B00FF";
 static char titleselfloatcolor[]         = "#FF1493";
@@ -225,7 +225,7 @@ static char ltsymbolbgcolor[]            = "#f7d092";
 #endif // BAR_LTSYMBOL_SCHEME_PATCH
 
 #if RENAMED_SCRATCHPADS_PATCH
-static char scratchselfgcolor[]          = "#F8E0D4";
+static char scratchselfgcolor[]          = "#FFFFFF"; /* focused scratchpad title */
 static char scratchselbgcolor[]          = "#8B00FF";
 static char scratchselbordercolor[]      = "#FF1493";
 static char scratchselfloatcolor[]       = "#FF1493";
@@ -440,9 +440,9 @@ static const char *const autostart[] = {
 #endif // COOL_AUTOSTART_PATCH
 
 #if RENAMED_SCRATCHPADS_PATCH
-static const char *scratchpadcmd[] = {"s", "st", "-n", "spterm", "-f", "scientifica:size=8", NULL};
+static const char *scratchpadcmd[] = {"s", "st", "-n", "spterm", "-g", "80x25", "-f", "scientifica:size=8", NULL};
 #elif SCRATCHPADS_PATCH
-const char *spcmd1[] = {"st", "-n", "spterm", "-g", "120x34", NULL };
+const char *spcmd1[] = {"st", "-n", "spterm", "-g", "80x25", NULL };
 static Sp scratchpads[] = {
    /* name          cmd  */
    {"spterm",      spcmd1},
@@ -519,6 +519,10 @@ static const int tagrows = 2;
  * Refer to the Rule struct definition for the list of available fields depending on
  * the patches you enable.
  */
+/* Default floating size for st and the scratchpad (cells). */
+static const int termfloatcols = 80;
+static const int termfloatrows = 25;
+
 static const Rule rules[] = {
 	/* xprop(1):
 	 *	WM_CLASS(STRING) = instance, class
@@ -533,7 +537,7 @@ static const Rule rules[] = {
 	RULE(.class = "Gimp", .tags = 1 << 4, .monitor = 0)
 	RULE(.class = "st-256color", .isterminal = 1)
 	#if RENAMED_SCRATCHPADS_PATCH
-	RULE(.instance = "spterm", .scratchkey = 's', .isfloating = 1)
+	RULE(.instance = "spterm", .scratchkey = 's', .isfloating = 1, .isterminal = 1)
 	#elif SCRATCHPADS_PATCH
 	RULE(.instance = "spterm", .tags = SPTAG(0), .isfloating = 1)
 	#endif // SCRATCHPADS_PATCH

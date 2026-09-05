@@ -767,6 +767,9 @@ static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
 static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
+#if SWALLOW_PATCH
+static int settermfloatsize(Client *c, int center);
+#endif // SWALLOW_PATCH
 static void toggletag(const Arg *arg);
 static void toggleview(const Arg *arg);
 static void unfocus(Client *c, int setfocus, Client *nextfocus);
@@ -2772,6 +2775,9 @@ manage(Window w, XWindowAttributes *wa)
 	if (!c->isfloating)
 		c->isfloating = c->oldstate = trans != None || c->isfixed;
 	if (c->isfloating) {
+		#if SWALLOW_PATCH
+		settermfloatsize(c, 1);
+		#endif // SWALLOW_PATCH
 		XRaiseWindow(dpy, c->win);
 		XSetWindowBorder(dpy, w, scheme[SchemeNorm][ColFloat].pixel);
 	}
@@ -4475,6 +4481,54 @@ togglebar(const Arg *arg)
 	arrange(selmon);
 }
 
+#if SWALLOW_PATCH
+static int
+settermfloatsize(Client *c, int center)
+{
+	int nw, nh, nx, ny;
+
+	if (!c)
+		return 0;
+	#if RENAMED_SCRATCHPADS_PATCH
+	if (!c->isterminal && !c->scratchkey)
+		return 0;
+	#else
+	if (!c->isterminal)
+		return 0;
+	#endif // RENAMED_SCRATCHPADS_PATCH
+	if (!c->hintsvalid)
+		updatesizehints(c);
+	if (!c->incw || !c->inch)
+		return 0;
+
+	nw = c->basew + termfloatcols * c->incw;
+	nh = c->baseh + termfloatrows * c->inch;
+	if (!center) {
+		#if SAVEFLOATS_PATCH || EXRESIZE_PATCH
+		if (c->sfx != -9999) {
+			nx = c->sfx;
+			ny = c->sfy;
+		} else
+		#endif // SAVEFLOATS_PATCH || EXRESIZE_PATCH
+		{
+			nx = c->x;
+			ny = c->y;
+		}
+	} else {
+		nx = c->mon->wx + (c->mon->ww - nw - 2 * c->bw) / 2;
+		ny = c->mon->wy + (c->mon->wh - nh - 2 * c->bw) / 2;
+	}
+	resize(c, nx, ny, nw, nh, 0);
+	#if SAVEFLOATS_PATCH || EXRESIZE_PATCH
+	c->sfx = c->x;
+	c->sfy = c->y;
+	c->sfw = c->w;
+	c->sfh = c->h;
+	#endif // SAVEFLOATS_PATCH || EXRESIZE_PATCH
+	return 1;
+}
+#endif // SWALLOW_PATCH
+
 void
 togglefloating(const Arg *arg)
 {
@@ -4511,6 +4565,11 @@ togglefloating(const Arg *arg)
 	#endif // RENAMED_SCRATCHPADS_PATCH
 	#endif // BAR_FLEXWINTITLE_PATCH
 	if (c->isfloating) {
+		#if SWALLOW_PATCH
+		if (c->isterminal && settermfloatsize(c, 0))
+			; /* 80x25 cells from size hints */
+		else
+		#endif // SWALLOW_PATCH
 		#if SAVEFLOATS_PATCH || EXRESIZE_PATCH
 		if (c->sfx != -9999) {
 			/* restore last known float dimensions */

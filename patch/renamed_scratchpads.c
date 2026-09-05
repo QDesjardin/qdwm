@@ -86,8 +86,12 @@ togglescratch(const Arg *arg)
 			} else {
 				XSetWindowBorder(dpy, c->win, scheme[SchemeScratchNorm][ColBorder].pixel);
 				c->tags = c->mon->tagset[c->mon->seltags];
-				if (c->isfloating)
+				if (c->isfloating) {
+					#if SWALLOW_PATCH
+					settermfloatsize(c, 1);
+					#endif // SWALLOW_PATCH
 					XRaiseWindow(dpy, c->win);
+				}
 			}
 		}
 	}
@@ -109,6 +113,12 @@ togglescratch(const Arg *arg)
 
 		/* Center floating scratchpad windows when moved from one monitor to another */
 		if (c->isfloating) {
+			#if SWALLOW_PATCH
+			if (settermfloatsize(c, 1)) {
+				XRaiseWindow(dpy, c->win);
+				continue;
+			}
+			#endif // SWALLOW_PATCH
 			if (c->w > selmon->ww)
 				c->w = selmon->ww - c->bw * 2;
 			if (c->h > selmon->wh)
@@ -130,8 +140,12 @@ togglescratch(const Arg *arg)
 	if (found) {
 		focus(ISVISIBLE(found) ? found : NULL);
 		arrange(NULL);
-		if (found->isfloating)
+		if (found->isfloating) {
+			#if SWALLOW_PATCH
+			settermfloatsize(found, 1);
+			#endif // SWALLOW_PATCH
 			XRaiseWindow(dpy, found->win);
+		}
 	} else {
 		spawn(&(Arg){ .v = (const void *)(((char * const *)arg->v) + 1) });
 	}
