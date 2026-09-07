@@ -60,7 +60,11 @@ bartabdraw(Monitor *m, Client *c, int unused, int x, int w, int groupactive, Arg
 		? SchemeHidNorm
 		: m->sel == c
 		#endif
+		#if QUBES_DECORATIONS_PATCH
+		? qubesscheme(c)
+		#else
 		? SchemeSel
+		#endif // QUBES_DECORATIONS_PATCH
 		: groupactive
 		? SchemeTitleSel
 		: SchemeTitleNorm
@@ -68,11 +72,11 @@ bartabdraw(Monitor *m, Client *c, int unused, int x, int w, int groupactive, Arg
 	if (w <= TEXTW("A") - lrpad + tpad) // reduce text padding if wintitle is too small
 		tpad = (w - TEXTW("A") + lrpad < 0 ? 0 : (w - TEXTW("A") + lrpad) / 2);
 	#if BAR_WINICON_PATCH && BAR_CENTEREDWINDOWNAME_PATCH
-	else if (TEXTW(c->name) + ipad < w)
-		cpad = (w - TEXTW(c->name) - ipad) / 2;
+	else if (TEXTW(clienttitle(c)) + ipad < w)
+		cpad = (w - TEXTW(clienttitle(c)) - ipad) / 2;
 	#elif BAR_CENTEREDWINDOWNAME_PATCH
-	else if (TEXTW(c->name) < w)
-		cpad = (w - TEXTW(c->name)) / 2;
+	else if (TEXTW(clienttitle(c)) < w)
+		cpad = (w - TEXTW(clienttitle(c))) / 2;
 	#endif // BAR_CENTEREDWINDOWNAME_PATCH
 
 	XSetForeground(drw->dpy, drw->gc, drw->scheme[ColBg].pixel);
@@ -98,7 +102,7 @@ bartabdraw(Monitor *m, Client *c, int unused, int x, int w, int groupactive, Arg
 	#endif // BAR_WINICON_NOTITLE_PATCH
 	#endif // BAR_WINICON_PATCH
 
-	drw_text(drw, tx, a->y, tw, a->h, 0, c->name, 0, False);
+	drw_text(drw, tx, a->y, tw, a->h, 0, clienttitle(c), 0, False);
 
 	drawstateindicator(m, c, 1, x, a->y, w, a->h, 0, 0, c->isfixed);
 

@@ -50,7 +50,11 @@ draw_tags(Bar *bar, BarArg *a)
 		w = TEXTW(icon);
 		drw_setscheme(drw, scheme[
 			m->tagset[m->seltags] & 1 << i
+			#if QUBES_DECORATIONS_PATCH
+			? (m == selmon && m->sel ? qubesscheme(m->sel) : SchemeTagsSel)
+			#else
 			? SchemeTagsSel
+			#endif // QUBES_DECORATIONS_PATCH
 			: urg & 1 << i
 			? SchemeUrg
 			: SchemeTagsNorm

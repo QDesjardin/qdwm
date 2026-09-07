@@ -10,6 +10,19 @@
  * here for grouping purposes.
  */
 
+/* Qubes OS: colour focused border/title/tag by _QUBES_LABEL and prefix
+ * the window title with [vmname]. Leave off on Artix; the Qubes build
+ * script turns these on in patches.h.
+ * https://dwm.suckless.org/patches/qubesdecorations/
+ */
+#define QUBES_DECORATIONS_PATCH 0
+
+/* Qubes OS: match rules on _QUBES_LABEL and _QUBES_VMNAME.
+ * Requires QUBES_DECORATIONS_PATCH.
+ * https://dwm.suckless.org/patches/qubesrules/
+ */
+#define QUBES_RULES_PATCH 0
+
 /**
  * Bar modules
  */

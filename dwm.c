@@ -196,6 +196,17 @@ enum {
 	SchemeFlexInaFloat,
 	SchemeFlexSelFloat,
 	#endif // BAR_FLEXWINTITLE_PATCH
+	#if QUBES_DECORATIONS_PATCH
+	SchemeQubes0, /* dom0 */
+	SchemeQubes1, /* red */
+	SchemeQubes2, /* orange */
+	SchemeQubes3, /* yellow */
+	SchemeQubes4, /* green */
+	SchemeQubes5, /* gray */
+	SchemeQubes6, /* blue */
+	SchemeQubes7, /* purple */
+	SchemeQubes8, /* black */
+	#endif // QUBES_DECORATIONS_PATCH
 }; /* color schemes */
 
 enum {
@@ -353,6 +364,11 @@ struct XkbInfo {
 typedef struct Client Client;
 struct Client {
 	char name[256];
+	#if QUBES_DECORATIONS_PATCH
+	char vmname[256];
+	char dispname[516];
+	int label;
+	#endif // QUBES_DECORATIONS_PATCH
 	float mina, maxa;
 	#if CFACTS_PATCH
 	float cfact;
@@ -556,6 +572,10 @@ struct Monitor {
 };
 
 typedef struct {
+	#if QUBES_RULES_PATCH
+	int label;
+	const char *qube;
+	#endif // QUBES_RULES_PATCH
 	const char *class;
 	#if WINDOWROLERULE_PATCH
 	const char *role;
@@ -958,6 +978,10 @@ applyrules(Client *c)
 	for (i = 0; i < LENGTH(rules); i++) {
 		r = &rules[i];
 		if ((!r->title || strstr(c->name, r->title))
+		#if QUBES_RULES_PATCH
+		&& (!r->label || c->label == r->label)
+		&& (!r->qube || strstr(c->vmname, r->qube))
+		#endif // QUBES_RULES_PATCH
 		&& (!r->class || strstr(class, r->class))
 		#if WINDOWROLERULE_PATCH
 		&& (!r->role || strstr(role, r->role))
@@ -2228,7 +2252,12 @@ focus(Client *c)
 		attachstack(c);
 		grabbuttons(c, 1);
 		#if !BAR_FLEXWINTITLE_PATCH
-		#if RENAMED_SCRATCHPADS_PATCH
+		#if QUBES_DECORATIONS_PATCH
+		if (c->isfloating)
+			XSetWindowBorder(dpy, c->win, scheme[qubesscheme(c)][ColFloat].pixel);
+		else
+			XSetWindowBorder(dpy, c->win, scheme[qubesscheme(c)][ColBorder].pixel);
+		#elif RENAMED_SCRATCHPADS_PATCH
 		if (c->scratchkey != 0 && c->isfloating)
 			XSetWindowBorder(dpy, c->win, scheme[SchemeScratchSel][ColFloat].pixel);
 		else if (c->scratchkey != 0)
@@ -2242,7 +2271,7 @@ focus(Client *c)
 			XSetWindowBorder(dpy, c->win, scheme[SchemeSel][ColFloat].pixel);
 		else
 			XSetWindowBorder(dpy, c->win, scheme[SchemeSel][ColBorder].pixel);
-		#endif // RENAMED_SCRATCHPADS_PATCH
+		#endif // QUBES_DECORATIONS_PATCH | RENAMED_SCRATCHPADS_PATCH
 		#endif // BAR_FLEXWINTITLE_PATCH
 		setfocus(c);
 	} else {
@@ -3137,7 +3166,11 @@ propertynotify(XEvent *e)
 			#endif // TAB_PATCH
 			break;
 		}
-		if (ev->atom == XA_WM_NAME || ev->atom == netatom[NetWMName]) {
+		if (ev->atom == XA_WM_NAME || ev->atom == netatom[NetWMName]
+		#if QUBES_DECORATIONS_PATCH
+		|| ev->atom == qubesatom[QubesVMName] || ev->atom == qubesatom[QubesLabel]
+		#endif // QUBES_DECORATIONS_PATCH
+		) {
 			updatetitle(c);
 			if (c == c->mon->sel)
 				drawbar(c->mon);
@@ -4042,6 +4075,10 @@ setup(void)
 	netatom[NetWMFullscreen] = XInternAtom(dpy, "_NET_WM_STATE_FULLSCREEN", False);
 	netatom[NetWMWindowType] = XInternAtom(dpy, "_NET_WM_WINDOW_TYPE", False);
 	netatom[NetClientList] = XInternAtom(dpy, "_NET_CLIENT_LIST", False);
+	#if QUBES_DECORATIONS_PATCH
+	qubesatom[QubesLabel] = XInternAtom(dpy, "_QUBES_LABEL", False);
+	qubesatom[QubesVMName] = XInternAtom(dpy, "_QUBES_VMNAME", False);
+	#endif // QUBES_DECORATIONS_PATCH
 	#if NET_CLIENT_LIST_STACKING_PATCH
 	netatom[NetClientListStacking] = XInternAtom(dpy, "_NET_CLIENT_LIST_STACKING", False);
 	#endif // NET_CLIENT_LIST_STACKING_PATCH
@@ -5325,6 +5362,9 @@ updatetitle(Client *c)
 		gettextprop(c->win, XA_WM_NAME, c->name, sizeof c->name);
 	if (c->name[0] == '\0') /* hack to mark broken clients */
 		strcpy(c->name, broken);
+	#if QUBES_DECORATIONS_PATCH
+	updatequbestitle(c);
+	#endif // QUBES_DECORATIONS_PATCH
 
 	#if IPC_PATCH
 	for (Monitor *m = mons; m; m = m->next) {

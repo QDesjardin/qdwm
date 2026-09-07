@@ -57,7 +57,7 @@ drawtab(Monitor *m)
 	for (c = m->clients; c; c = c->next) {
 		if (!ISVISIBLE(c) || HIDDEN(c))
 			continue;
-		m->tab_widths[m->ntabs] = TEXTW(c->name);
+		m->tab_widths[m->ntabs] = TEXTW(clienttitle(c));
 		tot_width += m->tab_widths[m->ntabs];
 		++m->ntabs;
 		if (m->ntabs >= MAXTABS)
@@ -87,7 +87,7 @@ drawtab(Monitor *m)
 			m->tab_widths[i] = maxsize;
 		w = m->tab_widths[i];
 		drw_setscheme(drw, scheme[(c == m->sel) ? SchemeSel : SchemeNorm]);
-		drw_text(drw, x, 0, w, th, 0, c->name, 0, False);
+		drw_text(drw, x, 0, w, th, 0, clienttitle(c), 0, False);
 		x += w;
 		++i;
 	}

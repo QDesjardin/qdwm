@@ -35,7 +35,11 @@ draw_wintitle(Bar *bar, BarArg *a)
 	int tx = x;
 	int tw = w;
 
-	drw_setscheme(drw, scheme[m == selmon ? SchemeTitleSel : SchemeTitleNorm]);
+	drw_setscheme(drw, scheme[
+		#if QUBES_DECORATIONS_PATCH
+		m == selmon ? qubesscheme(c) :
+		#endif // QUBES_DECORATIONS_PATCH
+		m == selmon ? SchemeTitleSel : SchemeTitleNorm]);
 	#if BAR_IGNORE_XFT_ERRORS_WHEN_DRAWING_TEXT_PATCH
 	XSetErrorHandler(xerrordummy);
 	#endif // BAR_IGNORE_XFT_ERRORS_WHEN_DRAWING_TEXT_PATCH
@@ -43,11 +47,11 @@ draw_wintitle(Bar *bar, BarArg *a)
 	if (w <= TEXTW("A") - lrpad + tpad) // reduce text padding if wintitle is too small
 		tpad = (w - TEXTW("A") + lrpad < 0 ? 0 : (w - TEXTW("A") + lrpad) / 2);
 	#if BAR_WINICON_PATCH && BAR_CENTEREDWINDOWNAME_PATCH
-	else if (TEXTW(c->name) + ipad < w)
-		cpad = (w - TEXTW(c->name) - ipad) / 2;
+	else if (TEXTW(clienttitle(c)) + ipad < w)
+		cpad = (w - TEXTW(clienttitle(c)) - ipad) / 2;
 	#elif BAR_CENTEREDWINDOWNAME_PATCH
-	else if (TEXTW(c->name) < w)
-		cpad = (w - TEXTW(c->name)) / 2;
+	else if (TEXTW(clienttitle(c)) < w)
+		cpad = (w - TEXTW(clienttitle(c))) / 2;
 	#endif // BAR_CENTEREDWINDOWNAME_PATCH
 
 	XSetForeground(drw->dpy, drw->gc, drw->scheme[ColBg].pixel);
@@ -73,7 +77,7 @@ draw_wintitle(Bar *bar, BarArg *a)
 	#endif // BAR_WINICON_NOTITLE_PATCH
 	#endif // BAR_WINICON_PATCH
 
-	drw_text(drw, tx, a->y, tw, a->h, 0, c->name, 0, False);
+	drw_text(drw, tx, a->y, tw, a->h, 0, clienttitle(c), 0, False);
 
 	#if BAR_IGNORE_XFT_ERRORS_WHEN_DRAWING_TEXT_PATCH
 	XSync(dpy, False);

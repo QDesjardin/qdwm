@@ -48,7 +48,7 @@ draw_fancybar(Bar *bar, BarArg *a)
 		for (c = m->clients; c; c = c->next) {
 			if (!ISVISIBLE(c) || c == m->sel)
 				continue;
-			tabw = TEXTW(c->name);
+			tabw = TEXTW(clienttitle(c));
 			#if BAR_WINICON_PATCH
 			#if BAR_WINICON_NOTITLE_PATCH
 			if (c->icon)
@@ -70,7 +70,7 @@ draw_fancybar(Bar *bar, BarArg *a)
 		for (c = m->clients; c; c = c->next) {
 			if (!ISVISIBLE(c))
 				continue;
-			tabw = MIN(m->sel == c ? w : mw, TEXTW(c->name));
+			tabw = MIN(m->sel == c ? w : mw, TEXTW(clienttitle(c)));
 			#if BAR_WINICON_PATCH
 			#if BAR_WINICON_NOTITLE_PATCH
 			if ((ipad = c->icon ? c->icw : 0))
@@ -82,7 +82,11 @@ draw_fancybar(Bar *bar, BarArg *a)
 			#endif // BAR_WINICON_PATCH
 			tx = x;
 			tw = tabw;
-			drw_setscheme(drw, scheme[m->sel == c ? SchemeTitleSel : SchemeTitleNorm]);
+			drw_setscheme(drw, scheme[
+				#if QUBES_DECORATIONS_PATCH
+				m->sel == c ? qubesscheme(c) :
+				#endif // QUBES_DECORATIONS_PATCH
+				m->sel == c ? SchemeTitleSel : SchemeTitleNorm]);
 
 			XSetForeground(drw->dpy, drw->gc, drw->scheme[ColBg].pixel);
 			XFillRectangle(drw->dpy, drw->drawable, drw->gc, tx, a->y, tw, a->h);
@@ -104,7 +108,7 @@ draw_fancybar(Bar *bar, BarArg *a)
 			#endif // BAR_WINICON_NOTITLE_PATCH
 			#endif // BAR_WINICON_PATCH
 
-			drw_text(drw, tx, a->y, tw, a->h, 0, c->name, 0, False);
+			drw_text(drw, tx, a->y, tw, a->h, 0, clienttitle(c), 0, False);
 			drawstateindicator(c->mon, c, 1, x, a->y, tabw, a->h, 0, 0, c->isfixed);
 			x += tabw;
 			w -= tabw;

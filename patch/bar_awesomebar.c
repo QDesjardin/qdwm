@@ -57,11 +57,11 @@ draw_awesomebar(Bar *bar, BarArg *a)
 			tw = tabw;
 
 			#if BAR_WINICON_PATCH && BAR_CENTEREDWINDOWNAME_PATCH
-			if (TEXTW(c->name) + ipad < tabw)
-				cpad = (tabw - TEXTW(c->name) - ipad) / 2;
+			if (TEXTW(clienttitle(c)) + ipad < tabw)
+				cpad = (tabw - TEXTW(clienttitle(c)) - ipad) / 2;
 			#elif BAR_CENTEREDWINDOWNAME_PATCH
-			if (TEXTW(c->name) < tabw)
-				cpad = (tabw - TEXTW(c->name)) / 2;
+			if (TEXTW(clienttitle(c)) < tabw)
+				cpad = (tabw - TEXTW(clienttitle(c))) / 2;
 			#endif // BAR_CENTEREDWINDOWNAME_PATCH
 
 			drw_setscheme(drw, scheme[scm]);
@@ -89,7 +89,7 @@ draw_awesomebar(Bar *bar, BarArg *a)
 			#endif // BAR_WINICON_NOTITLE_PATCH
 			#endif // BAR_WINICON_PATCH
 
-			drw_text(drw, tx, a->y, tw, a->h, 0, c->name, 0, False);
+			drw_text(drw, tx, a->y, tw, a->h, 0, clienttitle(c), 0, False);
 
 			drawstateindicator(c->mon, c, 1, x, a->y, tabw + (i < remainder ? 1 : 0), a->h, 0, 0, c->isfixed);
 			x += tabw + (i < remainder ? 1 : 0);

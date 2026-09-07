@@ -219,6 +219,19 @@ static char urgbgcolor[]                 = "#00E08B";
 static char urgbordercolor[]             = "#00E08B";
 static char urgfloatcolor[]              = "#00E08B";
 
+#if QUBES_DECORATIONS_PATCH
+/* Qubes GUI label colours (dom0 + labels 1-8). Dark fg on yellow/gray. */
+static char qubes0fg[] = "#000000"; static char qubes0bg[] = "#ffffff";
+static char qubes1fg[] = "#ffffff"; static char qubes1bg[] = "#e6194b";
+static char qubes2fg[] = "#ffffff"; static char qubes2bg[] = "#f58231";
+static char qubes3fg[] = "#070605"; static char qubes3bg[] = "#ffe119";
+static char qubes4fg[] = "#ffffff"; static char qubes4bg[] = "#3cb44b";
+static char qubes5fg[] = "#070605"; static char qubes5bg[] = "#bebebe";
+static char qubes6fg[] = "#ffffff"; static char qubes6bg[] = "#4363d8";
+static char qubes7fg[] = "#ffffff"; static char qubes7bg[] = "#9a009a";
+static char qubes8fg[] = "#ffffff"; static char qubes8bg[] = "#000000";
+#endif // QUBES_DECORATIONS_PATCH
+
 #if BAR_LTSYMBOL_SCHEME_PATCH
 static char ltsymbolfgcolor[]            = "#070605";
 static char ltsymbolbgcolor[]            = "#f7d092";
@@ -329,6 +342,17 @@ static const unsigned int alphas[][3] = {
 	[SchemeFlexSelSPRL]  = { OPAQUE, baralpha, borderalpha },
 	[SchemeFlexSelFloat] = { OPAQUE, baralpha, borderalpha },
 	#endif // BAR_FLEXWINTITLE_PATCH
+	#if QUBES_DECORATIONS_PATCH
+	[SchemeQubes0] = { OPAQUE, baralpha, borderalpha },
+	[SchemeQubes1] = { OPAQUE, baralpha, borderalpha },
+	[SchemeQubes2] = { OPAQUE, baralpha, borderalpha },
+	[SchemeQubes3] = { OPAQUE, baralpha, borderalpha },
+	[SchemeQubes4] = { OPAQUE, baralpha, borderalpha },
+	[SchemeQubes5] = { OPAQUE, baralpha, borderalpha },
+	[SchemeQubes6] = { OPAQUE, baralpha, borderalpha },
+	[SchemeQubes7] = { OPAQUE, baralpha, borderalpha },
+	[SchemeQubes8] = { OPAQUE, baralpha, borderalpha },
+	#endif // QUBES_DECORATIONS_PATCH
 };
 #endif // BAR_ALPHA_PATCH
 #if BAR_VTCOLORS_PATCH
@@ -404,6 +428,17 @@ static char *colors[][ColCount] = {
 	[SchemeFlexSelSPRL]  = { flexselfgcolor,   selSPRLbgcolor,   selSPRLbgcolor,       c000000 },
 	[SchemeFlexSelFloat] = { flexselfgcolor,   selfloatbgcolor,  selfloatbgcolor,      c000000 },
 	#endif // BAR_FLEXWINTITLE_PATCH
+	#if QUBES_DECORATIONS_PATCH
+	[SchemeQubes0] = { qubes0fg, qubes0bg, qubes0bg, qubes0bg },
+	[SchemeQubes1] = { qubes1fg, qubes1bg, qubes1bg, qubes1bg },
+	[SchemeQubes2] = { qubes2fg, qubes2bg, qubes2bg, qubes2bg },
+	[SchemeQubes3] = { qubes3fg, qubes3bg, qubes3bg, qubes3bg },
+	[SchemeQubes4] = { qubes4fg, qubes4bg, qubes4bg, qubes4bg },
+	[SchemeQubes5] = { qubes5fg, qubes5bg, qubes5bg, qubes5bg },
+	[SchemeQubes6] = { qubes6fg, qubes6bg, qubes6bg, qubes6bg },
+	[SchemeQubes7] = { qubes7fg, qubes7bg, qubes7bg, qubes7bg },
+	[SchemeQubes8] = { qubes8fg, qubes8bg, qubes8bg, qubes8bg },
+	#endif // QUBES_DECORATIONS_PATCH
 };
 
 #if BAR_POWERLINE_STATUS_PATCH
@@ -529,6 +564,14 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 *	WM_WINDOW_ROLE(STRING) = role
 	 *	_NET_WM_WINDOW_TYPE(ATOM) = wintype
+	 *	_QUBES_LABEL(CARDINAL) = label   (QUBES_RULES_PATCH)
+	 *	_QUBES_VMNAME(STRING) = qube     (QUBES_RULES_PATCH)
+	 */
+	/* Example Qubes rules (uncomment after enabling QUBES_RULES_PATCH):
+	 * RULE(.label = 1, .tags = 1 << 0)              // red  -> tag 1
+	 * RULE(.qube = "personal", .tags = 1 << 1)
+	 * RULE(.qube = "work", .tags = 1 << 2)
+	 * RULE(.qube = "untrusted", .tags = 1 << 3)
 	 */
 	RULE(.wintype = WTYPE "DIALOG", .isfloating = 1)
 	RULE(.wintype = WTYPE "UTILITY", .isfloating = 1)

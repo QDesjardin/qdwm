@@ -440,3 +440,7 @@
 #include "layout_tile.c"
 #endif
 
+#if QUBES_DECORATIONS_PATCH
+#include "qubesdecorations.c"
+#endif
+

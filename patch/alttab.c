@@ -123,7 +123,7 @@ drawalttab(int nwins, int first, Monitor *m)
 			continue;
 
 		drw_setscheme(drw, scheme[c == m->sel ? SchemeSel : SchemeNorm]);
-		drw_text(drw, 0, y, maxwtab, h, 0, c->name, 0, 0);
+		drw_text(drw, 0, y, maxwtab, h, 0, clienttitle(c), 0, 0);
 		y += h;
 	}
 

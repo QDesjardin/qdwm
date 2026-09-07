@@ -430,3 +430,5 @@
 #include "layout_tile.h"
 #endif
 
+#include "qubesdecorations.h"
+

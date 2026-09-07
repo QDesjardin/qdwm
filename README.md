@@ -12,6 +12,19 @@ This build was put together with [Grok Build](https://grok.x.ai/) — it saved t
 
 **Mod key is Super (Mod4).** Edit `config.def.h` and `patches.def.h`, then `make && sudo make install`. Restart with Super+Shift+Q (keeps the session). Super+Ctrl+Shift+Q quits X.
 
+## Qubes OS
+
+Port of [qubesdecorations](https://dwm.suckless.org/patches/qubesdecorations/) + [qubesrules](https://dwm.suckless.org/patches/qubesrules/) as flexipatch flags. Off by default so Artix stays Dairy-magenta.
+
+On Qubes, flip both in `patches.h` then rebuild (compile in a Fedora AppVM, copy the binary into `dom0`; do not compile in `dom0`):
+
+```
+#define QUBES_DECORATIONS_PATCH 1
+#define QUBES_RULES_PATCH 1
+```
+
+Focused border, title tab, and selected tag follow `_QUBES_LABEL`. Titles are `[vmname] …`. Match rules with `.label` / `.qube`. qdest needs no Qubes patch — it is just `st`.
+
 ## Companion programs
 
 Install these if you want the default keybinds to actually do something:
