@@ -297,17 +297,18 @@ setclientfields(Client *c)
 {
 	/* Perists client information in 32 bits laid out like this:
 	 *
-	 * |00000000|00000|0|0|0|0|0|0|0|0|00000000|000
-	 * |        |     | | | | | | | | |        |-- monitor index
-	 * |        |     | | | | | | | | |-- client index
-	 * |        |     | | | | | | | |-- isfloating
-	 * |        |     | | | | | | |-- ispermanent
-	 * |        |     | | | | | |-- isterminal
-	 * |        |     | | | | |-- noswallow
-	 * |        |     | | | |-- issteam
-	 * |        |     | | |-- issticky
-	 * |        |     | |-- fakefullscreen
-	 * |        |     |-- isfreesize
+	 * |00000000|0000|0|0|0|0|0|0|0|0|0|00000000|000
+	 * |        |    | | | | | | | | | |        |-- monitor index
+	 * |        |    | | | | | | | | | |-- client index
+	 * |        |    | | | | | | | | |-- isfloating
+	 * |        |    | | | | | | | |-- ispermanent
+	 * |        |    | | | | | | |-- isterminal
+	 * |        |    | | | | | |-- noswallow
+	 * |        |    | | | | |-- issteam
+	 * |        |    | | | |-- issticky
+	 * |        |    | | |-- fakefullscreen
+	 * |        |    | |-- isfreesize
+	 * |        |    |-- nallowkill (1 = unkilleable; 0 on old atoms)
 	 * |        |
 	 * |        |-- reserved
 	 * |-- scratchkey (for scratchpads)
@@ -335,6 +336,9 @@ setclientfields(Client *c)
 		#if SIZEHINTS_ISFREESIZE_PATCH
 		| (c->isfreesize & 0x1) << 18
 		#endif // SIZEHINTS_ISFREESIZE_PATCH
+		#if ALLOWKILLRULE_PATCH
+		| ((!c->allowkill) & 0x1) << 19
+		#endif // ALLOWKILLRULE_PATCH
 		#if RENAMED_SCRATCHPADS_PATCH
 		| (c->scratchkey & 0xFF) << 24
 		#endif // RENAMED_SCRATCHPADS_PATCH
@@ -377,6 +381,10 @@ getclientfields(Client *c)
 	#if SIZEHINTS_ISFREESIZE_PATCH
 	c->isfreesize = (fields >> 18) & 0x1;
 	#endif // SIZEHINTS_ISFREESIZE_PATCH
+	#if ALLOWKILLRULE_PATCH
+	/* Inverted so pre-bit atoms (reserved 0) restore as killable. */
+	c->allowkill = !((fields >> 19) & 0x1);
+	#endif // ALLOWKILLRULE_PATCH
 	#if RENAMED_SCRATCHPADS_PATCH
 	c->scratchkey = (fields >> 24) & 0xFF;
 	#endif // RENAMED_SCRATCHPADS_PATCH
