@@ -4,6 +4,68 @@ int isalt;
 Client **altsnext;    /* array of all clients in the tag */
 Window alttabwin;
 
+enum { AlttabGrabMs = 8000 };
+
+static int
+mod1keycodes(KeyCode *out, int max)
+{
+	XModifierKeymap *modmap;
+	int i, j, per, n = 0, dup;
+
+	if (tabmodkey && n < max)
+		out[n++] = (KeyCode)tabmodkey;
+
+	modmap = XGetModifierMapping(dpy);
+	if (!modmap)
+		return n;
+	per = modmap->max_keypermod;
+	for (i = 0; i < per; i++) {
+		KeyCode m = modmap->modifiermap[Mod1MapIndex * per + i];
+		if (!m)
+			continue;
+		dup = 0;
+		for (j = 0; j < n; j++)
+			if (out[j] == m)
+				dup = 1;
+		if (!dup && n < max)
+			out[n++] = m;
+	}
+	XFreeModifiermap(modmap);
+	return n;
+}
+
+static int
+keycodein(KeyCode kc, KeyCode *set, int n)
+{
+	int i;
+
+	for (i = 0; i < n; i++)
+		if (set[i] == kc)
+			return 1;
+	return 0;
+}
+
+static int
+mod1held(KeyCode *set, int n)
+{
+	char keys[32];
+	int i;
+
+	XQueryKeymap(dpy, keys);
+	for (i = 0; i < n; i++) {
+		KeyCode m = set[i];
+		if (m && (keys[m / 8] & (1 << (m % 8))))
+			return 1;
+	}
+	return 0;
+}
+
+static int
+isxmodifier(KeySym ks)
+{
+	return ks >= XK_Shift_L && ks <= XK_Hyper_R;
+}
+
 void
 alttab()
 {
@@ -55,14 +117,19 @@ alttabend()
 		    restack(m);
 		}
 
-		free(altsnext); /* free list of clients */
 	}
 
-	/* destroy the window */
 	isalt = 0;
 	ntabs = 0;
-	XUnmapWindow(dpy, alttabwin);
-	XDestroyWindow(dpy, alttabwin);
+	if (altsnext) {
+		free(altsnext);
+		altsnext = NULL;
+	}
+	if (alttabwin) {
+		XUnmapWindow(dpy, alttabwin);
+		XDestroyWindow(dpy, alttabwin);
+		alttabwin = 0;
+	}
 }
 
 void
@@ -181,6 +248,11 @@ alttabstart(const Arg *arg)
 	drawalttab(ntabs, 1, m);
 
 	struct timespec ts = { .tv_sec = 0, .tv_nsec = 1000000 };
+	KeyCode alts[16];
+	int nalts = mod1keycodes(alts, 16);
+	struct timespec t0, tnow;
+	long elapsed;
+	int xfd = ConnectionNumber(dpy);
 
 	/* grab keyboard (take all input from keyboard) */
 	grabbed = 1;
@@ -200,17 +272,62 @@ alttabstart(const Arg *arg)
 		return;
 	}
 
-	while (grabbed) {
-		XNextEvent(dpy, &event);
-		if (event.type == KeyPress || event.type == KeyRelease) {
-			if (event.type == KeyRelease && event.xkey.keycode == tabmodkey) /* if mod key is released break cycle */
-				break;
+	/*
+	 * The stock patch only ungrabs on keycode tabmodkey (Alt_L / 0x40).
+	 * USB boards often fire Alt+Tab with Alt_R or release Alt before this
+	 * loop runs, which left XGrabKeyboard held and made the laptop keyboard
+	 * look dead until Alt_L was pressed. End the grab if no Mod1 key is
+	 * still down, on any Mod1 release, on Escape / a typing key, or after
+	 * a timeout.
+	 */
+	clock_gettime(CLOCK_MONOTONIC, &t0);
+	if (!mod1held(alts, nalts))
+		grabbed = 0;
 
-			if (event.type == KeyPress) {
-				if (event.xkey.keycode == tabcyclekey) { /* if tab is pressed move to the next window */
-					alttab();
-				}
+	while (grabbed) {
+		clock_gettime(CLOCK_MONOTONIC, &tnow);
+		elapsed = (tnow.tv_sec - t0.tv_sec) * 1000L
+			+ (tnow.tv_nsec - t0.tv_nsec) / 1000000L;
+		if (elapsed > AlttabGrabMs || !mod1held(alts, nalts))
+			break;
+
+		while (!XPending(dpy)) {
+			fd_set fds;
+			struct timeval tv;
+
+			clock_gettime(CLOCK_MONOTONIC, &tnow);
+			elapsed = (tnow.tv_sec - t0.tv_sec) * 1000L
+				+ (tnow.tv_nsec - t0.tv_nsec) / 1000000L;
+			if (elapsed > AlttabGrabMs || !mod1held(alts, nalts)) {
+				grabbed = 0;
+				break;
 			}
+			FD_ZERO(&fds);
+			FD_SET(xfd, &fds);
+			tv.tv_sec = 0;
+			tv.tv_usec = 100000;
+			if (select(xfd + 1, &fds, NULL, NULL, &tv) < 0)
+				break;
+		}
+		if (!grabbed || !XPending(dpy))
+			continue;
+
+		XNextEvent(dpy, &event);
+		if (event.type != KeyPress && event.type != KeyRelease)
+			continue;
+		if (event.type == KeyRelease && keycodein(event.xkey.keycode, alts, nalts))
+			break;
+		if (event.type != KeyPress)
+			continue;
+		if (event.xkey.keycode == tabcyclekey) {
+			alttab();
+			clock_gettime(CLOCK_MONOTONIC, &t0);
+			continue;
+		}
+		{
+			KeySym ks = XLookupKeysym(&event.xkey, 0);
+			if (ks == XK_Escape || !isxmodifier(ks))
+				break;
 		}
 	}
 
