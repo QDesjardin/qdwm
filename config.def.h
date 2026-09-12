@@ -282,7 +282,7 @@ static char selGRD2bgcolor[]             = "#1CEA7C";
 static char selGRDMbgcolor[]             = "#00F0FF";
 static char selHGRDbgcolor[]             = "#FFD700";
 static char selDWDLbgcolor[]             = "#00F0FF";
-static char selSPRLbgcolor[]             = "#C41E3A";
+static char selSPRLbgcolor[]             = "#7C1B2A";
 static char selfloatbgcolor[]            = "#C41E3A";
 #endif // BAR_FLEXWINTITLE_PATCH
 
