@@ -197,7 +197,7 @@ static char titlenormfloatcolor[]        = "#db8fd9";
 static char titleselfgcolor[]            = "#FFFFFF"; /* focused window title */
 static char titleselbgcolor[]            = "#7a3f99";
 static char titleselbordercolor[]        = "#7a3f99";
-static char titleselfloatcolor[]         = "#C41E3A";
+static char titleselfloatcolor[]         = "#7C1B2A";
 
 static char tagsnormfgcolor[]            = "#F8E0D4";
 static char tagsnormbgcolor[]            = "#070605";
