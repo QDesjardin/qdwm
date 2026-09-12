@@ -177,51 +177,51 @@ static const char *fonts[]               = { "scientifica:pixelsize=11:antialias
 #endif // BAR_PANGO_PATCH
 static const char dmenufont[]            = "dina:pixelsize=12:antialias=false:autohint=false";
 
-static char c000000[]                    = "#000000"; // placeholder value
+static char c000000[]                    = "#070605"; // placeholder value
 
 static char normfgcolor[]                = "#F8E0D4";
 static char normbgcolor[]                = "#070605";
 static char normbordercolor[]            = "#634053";
-static char normfloatcolor[]             = "#8B00FF";
+static char normfloatcolor[]             = "#db8fd9";
 
 static char selfgcolor[]                 = "#F8E0D4";
-static char selbgcolor[]                 = "#8B00FF";
-static char selbordercolor[]             = "#8B00FF";
-static char selfloatcolor[]              = "#FF1493";
+static char selbgcolor[]                 = "#634053";
+static char selbordercolor[]             = "#000000";
+static char selfloatcolor[]              = "#634053";
 
 static char titlenormfgcolor[]           = "#F8E0D4";
 static char titlenormbgcolor[]           = "#070605";
 static char titlenormbordercolor[]       = "#634053";
-static char titlenormfloatcolor[]        = "#8B00FF";
+static char titlenormfloatcolor[]        = "#db8fd9";
 
 static char titleselfgcolor[]            = "#FFFFFF"; /* focused window title */
-static char titleselbgcolor[]            = "#8B00FF";
-static char titleselbordercolor[]        = "#8B00FF";
-static char titleselfloatcolor[]         = "#FF1493";
+static char titleselbgcolor[]            = "#7a3f99";
+static char titleselbordercolor[]        = "#7a3f99";
+static char titleselfloatcolor[]         = "#C41E3A";
 
 static char tagsnormfgcolor[]            = "#F8E0D4";
 static char tagsnormbgcolor[]            = "#070605";
-static char tagsnormbordercolor[]        = "#634053";
-static char tagsnormfloatcolor[]         = "#8B00FF";
+static char tagsnormbordercolor[]        = "#070605";
+static char tagsnormfloatcolor[]         = "#070605";
 
-static char tagsselfgcolor[]             = "#F8E0D4";
-static char tagsselbgcolor[]             = "#8B00FF";
-static char tagsselbordercolor[]         = "#8B00FF";
-static char tagsselfloatcolor[]          = "#FF1493";
+static char tagsselfgcolor[]             = "#ffffff";
+static char tagsselbgcolor[]             = "#634053";
+static char tagsselbordercolor[]         = "#634053";
+static char tagsselfloatcolor[]          = "#634053";
 
-static char hidnormfgcolor[]             = "#1A6B7A";
-static char hidselfgcolor[]              = "#4ED8E8";
+static char hidnormfgcolor[]             = "#4D7589";
+static char hidselfgcolor[]              = "#00F0FF";
 static char hidnormbgcolor[]             = "#070605";
 static char hidselbgcolor[]              = "#070605";
 
 static char urgfgcolor[]                 = "#070605";
-static char urgbgcolor[]                 = "#00E08B";
-static char urgbordercolor[]             = "#00E08B";
-static char urgfloatcolor[]              = "#00E08B";
+static char urgbgcolor[]                 = "#1CEA7C";
+static char urgbordercolor[]             = "#1CEA7C";
+static char urgfloatcolor[]              = "#1CEA7C";
 
 #if QUBES_DECORATIONS_PATCH
 /* Qubes GUI label colours (dom0 + labels 1-8). Dark fg on yellow/gray. */
-static char qubes0fg[] = "#000000"; static char qubes0bg[] = "#ffffff";
+static char qubes0fg[] = "#070605"; static char qubes0bg[] = "#ffffff";
 static char qubes1fg[] = "#ffffff"; static char qubes1bg[] = "#e6194b";
 static char qubes2fg[] = "#ffffff"; static char qubes2bg[] = "#f58231";
 static char qubes3fg[] = "#070605"; static char qubes3bg[] = "#ffe119";
@@ -229,61 +229,61 @@ static char qubes4fg[] = "#ffffff"; static char qubes4bg[] = "#3cb44b";
 static char qubes5fg[] = "#070605"; static char qubes5bg[] = "#bebebe";
 static char qubes6fg[] = "#ffffff"; static char qubes6bg[] = "#4363d8";
 static char qubes7fg[] = "#ffffff"; static char qubes7bg[] = "#9a009a";
-static char qubes8fg[] = "#ffffff"; static char qubes8bg[] = "#000000";
+static char qubes8fg[] = "#ffffff"; static char qubes8bg[] = "#070605";
 #endif // QUBES_DECORATIONS_PATCH
 
 #if BAR_LTSYMBOL_SCHEME_PATCH
-static char ltsymbolfgcolor[]            = "#070605";
-static char ltsymbolbgcolor[]            = "#f7d092";
+static char ltsymbolfgcolor[]            = "#ffffff";
+static char ltsymbolbgcolor[]            = "#7C1B2A";
 #endif // BAR_LTSYMBOL_SCHEME_PATCH
 
 #if RENAMED_SCRATCHPADS_PATCH
-static char scratchselfgcolor[]          = "#FFFFFF"; /* focused scratchpad title */
-static char scratchselbgcolor[]          = "#8B00FF";
-static char scratchselbordercolor[]      = "#FF1493";
-static char scratchselfloatcolor[]       = "#FF1493";
+static char scratchselfgcolor[]          = "#ffffff"; /* focused scratchpad title */
+static char scratchselbgcolor[]          = "#b486dd";
+static char scratchselbordercolor[]      = "#b486dd";
+static char scratchselfloatcolor[]       = "#b486dd";
 
 static char scratchnormfgcolor[]         = "#F8E0D4";
-static char scratchnormbgcolor[]         = "#634053";
-static char scratchnormbordercolor[]     = "#8B00FF";
-static char scratchnormfloatcolor[]      = "#8B00FF";
+static char scratchnormbgcolor[]         = "#7a3f99";
+static char scratchnormbordercolor[]     = "#7a3f99";
+static char scratchnormfloatcolor[]      = "#7a3f99";
 #endif // RENAMED_SCRATCHPADS_PATCH
 
 #if BAR_FLEXWINTITLE_PATCH
 static char flexselfgcolor[]             = "#FFFFFF"; /* white text on bright layout tabs */
-static char normTTBbgcolor[]             = "#560E0E";
+static char normTTBbgcolor[]             = "#634053";
 static char normLTRbgcolor[]             = "#634053";
-static char normMONObgcolor[]            = "#2F3087";
-static char normGRIDbgcolor[]            = "#00543F";
-static char normGRD1bgcolor[]            = "#00543F";
-static char normGRD2bgcolor[]            = "#00543F";
-static char normGRDMbgcolor[]            = "#1A6B7A";
+static char normMONObgcolor[]            = "#0049fc";
+static char normGRIDbgcolor[]            = "#148F47";
+static char normGRD1bgcolor[]            = "#148F47";
+static char normGRD2bgcolor[]            = "#148F47";
+static char normGRDMbgcolor[]            = "#4D7589";
 static char normHGRDbgcolor[]            = "#CD7F32";
-static char normDWDLbgcolor[]            = "#1A6B7A";
+static char normDWDLbgcolor[]            = "#4D7589";
 static char normSPRLbgcolor[]            = "#634053";
-static char normfloatbgcolor[]           = "#2F3087";
-static char actTTBbgcolor[]              = "#C41E3A";
-static char actLTRbgcolor[]              = "#8B00FF";
-static char actMONObgcolor[]             = "#183EFA";
+static char normfloatbgcolor[]           = "#0049fc";
+static char actTTBbgcolor[]              = "#7C1B2A";
+static char actLTRbgcolor[]              = "#7a3f99";
+static char actMONObgcolor[]             = "#1d9bf0";
 static char actGRIDbgcolor[]             = "#1CEA7C";
 static char actGRD1bgcolor[]             = "#1CEA7C";
 static char actGRD2bgcolor[]             = "#1CEA7C";
-static char actGRDMbgcolor[]             = "#4ED8E8";
+static char actGRDMbgcolor[]             = "#00F0FF";
 static char actHGRDbgcolor[]             = "#FFD700";
-static char actDWDLbgcolor[]             = "#4ED8E8";
-static char actSPRLbgcolor[]             = "#8B00FF";
-static char actfloatbgcolor[]            = "#183EFA";
+static char actDWDLbgcolor[]             = "#00F0FF";
+static char actSPRLbgcolor[]             = "#7a3f99";
+static char actfloatbgcolor[]            = "#1d9bf0";
 static char selTTBbgcolor[]              = "#C41E3A";
-static char selLTRbgcolor[]              = "#8B00FF";
-static char selMONObgcolor[]             = "#183EFA";
+static char selLTRbgcolor[]              = "#7a3f99";
+static char selMONObgcolor[]             = "#1d9bf0";
 static char selGRIDbgcolor[]             = "#1CEA7C";
 static char selGRD1bgcolor[]             = "#1CEA7C";
 static char selGRD2bgcolor[]             = "#1CEA7C";
-static char selGRDMbgcolor[]             = "#4ED8E8";
+static char selGRDMbgcolor[]             = "#00F0FF";
 static char selHGRDbgcolor[]             = "#FFD700";
-static char selDWDLbgcolor[]             = "#4ED8E8";
-static char selSPRLbgcolor[]             = "#FF1493";
-static char selfloatbgcolor[]            = "#FF1493";
+static char selDWDLbgcolor[]             = "#00F0FF";
+static char selSPRLbgcolor[]             = "#C41E3A";
+static char selfloatbgcolor[]            = "#C41E3A";
 #endif // BAR_FLEXWINTITLE_PATCH
 
 #if BAR_ALPHA_PATCH
@@ -356,8 +356,8 @@ static const unsigned int alphas[][3] = {
 };
 #endif // BAR_ALPHA_PATCH
 #if BAR_VTCOLORS_PATCH
-static const char title_bg_dark[]   = "#303030";
-static const char title_bg_light[]  = "#fdfdfd";
+static const char title_bg_dark[]   = "#070605";
+static const char title_bg_light[]  = "#F8E0D4";
 static const int color_ptrs[][ColCount] = {
 	/*                       fg      bg      border  float */
 	[SchemeNorm]         = { -1,     -1,     5,      12 },
