@@ -238,7 +238,7 @@ static char ltsymbolbgcolor[]            = "#F8E0D4";
 #endif // BAR_LTSYMBOL_SCHEME_PATCH
 
 #if RENAMED_SCRATCHPADS_PATCH
-static char scratchselfgcolor[]          = "#ffffff"; /* focused scratchpad title */
+static char scratchselfgcolor[]          = "#000000"; /* focused scratchpad title */
 static char scratchselbgcolor[]          = "#b486dd";
 static char scratchselbordercolor[]      = "#b486dd";
 static char scratchselfloatcolor[]       = "#b486dd";
