@@ -32,7 +32,7 @@ Install these if you want the default keybinds to actually do something:
 | Program | Why |
 |---|---|
 | **st** ([qdest](https://github.com/QDesjardin/qdest)) | terminal (Super+Shift+Return) |
-| **rofi** | launcher (Super+P) |
+| **rofi** | launcher (Super+P and Ctrl+P) |
 | **maim** | screenshots → `~/screenies/` |
 | **dunst** | screenshot / selection toasts |
 | **dwmblocks** | status text on the bar |
@@ -49,7 +49,7 @@ Screenshot keys (need `maim` + `dunst`):
 | Keys | Action |
 |---|---|
 | Super+Shift+Return | spawn st |
-| Super+P | rofi run |
+| Super+P, Ctrl+P | rofi run |
 | Super+J / K | focus next / prev |
 | Super+H / L | shrink / grow master |
 | Super+I / D | more / fewer masters |
