@@ -965,11 +965,16 @@ static const char *dmenucmd[] = {
 };
 static const char *termcmd[]  = { "st", NULL };
 
+/* WxH+X+Y of the selected monitor. spawn() fills this before exec. */
+static char screenshotgeom[48] = "0x0+0+0";
+
 static const char *screenshot_cmd[] = {
     "sh",
     "-c",
     "f=~/screenies/$(date +\"pic-%y%m%d-%H%M-%S.png\"); "
-    "maim \"$f\" && dunstify \"Screenshot saved: $f\"",
+    "maim -g \"$1\" \"$f\" && dunstify \"Screenshot saved: $f\"",
+    "qdwm-shot",
+    screenshotgeom,
     NULL
 };
 

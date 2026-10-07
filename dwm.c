@@ -4349,6 +4349,9 @@ spawn(const Arg *arg)
 	if (arg->v == dmenucmd)
 		dmenumon[0] = '0' + selmon->num;
 	#endif // NODMENU_PATCH
+	if (arg->v == screenshot_cmd)
+		snprintf(screenshotgeom, sizeof screenshotgeom, "%dx%d%+d%+d",
+			selmon->mw, selmon->mh, selmon->mx, selmon->my);
 
 	#if RIODRAW_PATCH
 	if ((pid = fork()) == 0)

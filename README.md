@@ -42,7 +42,7 @@ Install these if you want the default keybinds to actually do something:
 Screenshot keys (need `maim` + `dunst`):
 
 - **Print** — select a rectangle, save `~/screenies/pic-YYMMDD-HHMM-SS-select.png`
-- **Ctrl+Print** — whole screen, save `~/screenies/pic-YYMMDD-HHMM-SS.png`
+- **Ctrl+Print** — active monitor, save `~/screenies/pic-YYMMDD-HHMM-SS.png`
 
 ## Keybinds worth knowing
 
