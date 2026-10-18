@@ -51,6 +51,15 @@ bartabdraw(Monitor *m, Client *c, int unused, int x, int w, int groupactive, Arg
 	int tx = x;
 	int tw = w;
 
+	#if QUBES_DECORATIONS_PATCH
+	if (m->sel == c
+		#ifdef HIDDEN
+		&& !HIDDEN(c)
+		#endif
+	)
+		drw_setscheme(drw, qubesscheme(c, 0));
+	else
+	#endif // QUBES_DECORATIONS_PATCH
 	drw_setscheme(drw, scheme[
 		m->sel == c
 		#ifdef HIDDEN
@@ -60,11 +69,7 @@ bartabdraw(Monitor *m, Client *c, int unused, int x, int w, int groupactive, Arg
 		? SchemeHidNorm
 		: m->sel == c
 		#endif
-		#if QUBES_DECORATIONS_PATCH
-		? qubesscheme(c)
-		#else
 		? SchemeSel
-		#endif // QUBES_DECORATIONS_PATCH
 		: groupactive
 		? SchemeTitleSel
 		: SchemeTitleNorm

@@ -35,11 +35,12 @@ draw_wintitle(Bar *bar, BarArg *a)
 	int tx = x;
 	int tw = w;
 
-	drw_setscheme(drw, scheme[
-		#if QUBES_DECORATIONS_PATCH
-		m == selmon ? qubesscheme(c) :
-		#endif // QUBES_DECORATIONS_PATCH
-		m == selmon ? SchemeTitleSel : SchemeTitleNorm]);
+	#if QUBES_DECORATIONS_PATCH
+	if (m == selmon)
+		drw_setscheme(drw, qubesscheme(c, 0));
+	else
+	#endif // QUBES_DECORATIONS_PATCH
+		drw_setscheme(drw, scheme[m == selmon ? SchemeTitleSel : SchemeTitleNorm]);
 	#if BAR_IGNORE_XFT_ERRORS_WHEN_DRAWING_TEXT_PATCH
 	XSetErrorHandler(xerrordummy);
 	#endif // BAR_IGNORE_XFT_ERRORS_WHEN_DRAWING_TEXT_PATCH

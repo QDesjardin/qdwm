@@ -82,11 +82,12 @@ draw_fancybar(Bar *bar, BarArg *a)
 			#endif // BAR_WINICON_PATCH
 			tx = x;
 			tw = tabw;
-			drw_setscheme(drw, scheme[
-				#if QUBES_DECORATIONS_PATCH
-				m->sel == c ? qubesscheme(c) :
-				#endif // QUBES_DECORATIONS_PATCH
-				m->sel == c ? SchemeTitleSel : SchemeTitleNorm]);
+			#if QUBES_DECORATIONS_PATCH
+			if (m->sel == c)
+				drw_setscheme(drw, qubesscheme(c, 0));
+			else
+			#endif // QUBES_DECORATIONS_PATCH
+				drw_setscheme(drw, scheme[m->sel == c ? SchemeTitleSel : SchemeTitleNorm]);
 
 			XSetForeground(drw->dpy, drw->gc, drw->scheme[ColBg].pixel);
 			XFillRectangle(drw->dpy, drw->drawable, drw->gc, tx, a->y, tw, a->h);

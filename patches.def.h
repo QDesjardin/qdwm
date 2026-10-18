@@ -10,9 +10,11 @@
  * here for grouping purposes.
  */
 
-/* Qubes OS: colour focused border/title/tag by _QUBES_LABEL and prefix
- * the window title with [vmname]. Leave off on Artix; the Qubes build
- * script turns these on in patches.h.
+/* Qubes OS: colour each window from _QUBES_LABEL_COLOR (the qube's own
+ * label colour — nothing is hardcoded here). Dom0 has no property and
+ * is white when selected, grey when unfocused. Titles are prefixed
+ * with [vmname]. Leave off on Artix; the Qubes build script turns
+ * these on in patches.h.
  * https://dwm.suckless.org/patches/qubesdecorations/
  */
 #define QUBES_DECORATIONS_PATCH 0

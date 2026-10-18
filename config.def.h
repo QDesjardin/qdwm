@@ -220,16 +220,10 @@ static char urgbordercolor[]             = "#1CEA7C";
 static char urgfloatcolor[]              = "#1CEA7C";
 
 #if QUBES_DECORATIONS_PATCH
-/* Qubes GUI label colours (dom0 + labels 1-8). Dark fg on yellow/gray. */
-static char qubes0fg[] = "#070605"; static char qubes0bg[] = "#ffffff";
-static char qubes1fg[] = "#ffffff"; static char qubes1bg[] = "#e6194b";
-static char qubes2fg[] = "#ffffff"; static char qubes2bg[] = "#f58231";
-static char qubes3fg[] = "#070605"; static char qubes3bg[] = "#ffe119";
-static char qubes4fg[] = "#ffffff"; static char qubes4bg[] = "#3cb44b";
-static char qubes5fg[] = "#070605"; static char qubes5bg[] = "#bebebe";
-static char qubes6fg[] = "#ffffff"; static char qubes6bg[] = "#4363d8";
-static char qubes7fg[] = "#ffffff"; static char qubes7bg[] = "#9a009a";
-static char qubes8fg[] = "#ffffff"; static char qubes8bg[] = "#070605";
+/* Domain colours are not listed here. Each window's _QUBES_LABEL_COLOR
+ * is the qube's label colour (custom labels included). Dom0 has no
+ * property and is white when selected, grey when unfocused. Foreground
+ * is chosen for contrast. */
 #endif // QUBES_DECORATIONS_PATCH
 
 #if BAR_LTSYMBOL_SCHEME_PATCH
@@ -342,17 +336,6 @@ static const unsigned int alphas[][3] = {
 	[SchemeFlexSelSPRL]  = { OPAQUE, baralpha, borderalpha },
 	[SchemeFlexSelFloat] = { OPAQUE, baralpha, borderalpha },
 	#endif // BAR_FLEXWINTITLE_PATCH
-	#if QUBES_DECORATIONS_PATCH
-	[SchemeQubes0] = { OPAQUE, baralpha, borderalpha },
-	[SchemeQubes1] = { OPAQUE, baralpha, borderalpha },
-	[SchemeQubes2] = { OPAQUE, baralpha, borderalpha },
-	[SchemeQubes3] = { OPAQUE, baralpha, borderalpha },
-	[SchemeQubes4] = { OPAQUE, baralpha, borderalpha },
-	[SchemeQubes5] = { OPAQUE, baralpha, borderalpha },
-	[SchemeQubes6] = { OPAQUE, baralpha, borderalpha },
-	[SchemeQubes7] = { OPAQUE, baralpha, borderalpha },
-	[SchemeQubes8] = { OPAQUE, baralpha, borderalpha },
-	#endif // QUBES_DECORATIONS_PATCH
 };
 #endif // BAR_ALPHA_PATCH
 #if BAR_VTCOLORS_PATCH
@@ -428,17 +411,6 @@ static char *colors[][ColCount] = {
 	[SchemeFlexSelSPRL]  = { flexselfgcolor,   selSPRLbgcolor,   selSPRLbgcolor,       c000000 },
 	[SchemeFlexSelFloat] = { flexselfgcolor,   selfloatbgcolor,  selfloatbgcolor,      c000000 },
 	#endif // BAR_FLEXWINTITLE_PATCH
-	#if QUBES_DECORATIONS_PATCH
-	[SchemeQubes0] = { qubes0fg, qubes0bg, qubes0bg, qubes0bg },
-	[SchemeQubes1] = { qubes1fg, qubes1bg, qubes1bg, qubes1bg },
-	[SchemeQubes2] = { qubes2fg, qubes2bg, qubes2bg, qubes2bg },
-	[SchemeQubes3] = { qubes3fg, qubes3bg, qubes3bg, qubes3bg },
-	[SchemeQubes4] = { qubes4fg, qubes4bg, qubes4bg, qubes4bg },
-	[SchemeQubes5] = { qubes5fg, qubes5bg, qubes5bg, qubes5bg },
-	[SchemeQubes6] = { qubes6fg, qubes6bg, qubes6bg, qubes6bg },
-	[SchemeQubes7] = { qubes7fg, qubes7bg, qubes7bg, qubes7bg },
-	[SchemeQubes8] = { qubes8fg, qubes8bg, qubes8bg, qubes8bg },
-	#endif // QUBES_DECORATIONS_PATCH
 };
 
 #if BAR_POWERLINE_STATUS_PATCH

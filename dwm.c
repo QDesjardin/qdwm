@@ -196,17 +196,6 @@ enum {
 	SchemeFlexInaFloat,
 	SchemeFlexSelFloat,
 	#endif // BAR_FLEXWINTITLE_PATCH
-	#if QUBES_DECORATIONS_PATCH
-	SchemeQubes0, /* dom0 */
-	SchemeQubes1, /* red */
-	SchemeQubes2, /* orange */
-	SchemeQubes3, /* yellow */
-	SchemeQubes4, /* green */
-	SchemeQubes5, /* gray */
-	SchemeQubes6, /* blue */
-	SchemeQubes7, /* purple */
-	SchemeQubes8, /* black */
-	#endif // QUBES_DECORATIONS_PATCH
 }; /* color schemes */
 
 enum {
@@ -368,6 +357,8 @@ struct Client {
 	char vmname[256];
 	char dispname[516];
 	int label;
+	int hasqubescolor;
+	unsigned int qubescolor; /* 0xRRGGBB from _QUBES_LABEL_COLOR; dom0 is white */
 	#endif // QUBES_DECORATIONS_PATCH
 	float mina, maxa;
 	#if CFACTS_PATCH
@@ -1480,10 +1471,6 @@ cleanupmon(Monitor *mon)
 void
 clientmessage(XEvent *e)
 {
-	#if BAR_SYSTRAY_PATCH
-	XWindowAttributes wa;
-	XSetWindowAttributes swa;
-	#endif // BAR_SYSTRAY_PATCH
 	XClientMessageEvent *cme = &e->xclient;
 	Client *c = wintoclient(cme->window);
 	#if FOCUSONNETACTIVE_PATCH
@@ -1492,41 +1479,8 @@ clientmessage(XEvent *e)
 
 	#if BAR_SYSTRAY_PATCH
 	if (showsystray && systray && cme->window == systray->win && cme->message_type == netatom[NetSystemTrayOP]) {
-		/* add systray icons */
-		if (cme->data.l[1] == SYSTEM_TRAY_REQUEST_DOCK) {
-			if (!(c = (Client *)calloc(1, sizeof(Client))))
-				die("fatal: could not malloc() %u bytes\n", sizeof(Client));
-			if (!(c->win = cme->data.l[2])) {
-				free(c);
-				return;
-			}
-
-			c->mon = selmon;
-			c->next = systray->icons;
-			systray->icons = c;
-			XGetWindowAttributes(dpy, c->win, &wa);
-			c->x = c->oldx = c->y = c->oldy = 0;
-			c->w = c->oldw = wa.width;
-			c->h = c->oldh = wa.height;
-			c->oldbw = wa.border_width;
-			c->bw = 0;
-			c->isfloating = True;
-			/* reuse tags field as mapped status */
-			c->tags = 1;
-			updatesizehints(c);
-			updatesystrayicongeom(c, wa.width, wa.height);
-			XAddToSaveSet(dpy, c->win);
-			XSelectInput(dpy, c->win, StructureNotifyMask | PropertyChangeMask | ResizeRedirectMask);
-			XClassHint ch = {"dwmsystray", "dwmsystray"};
-			XSetClassHint(dpy, c->win, &ch);
-			XReparentWindow(dpy, c->win, systray->win, 0, 0);
-			/* use parents background color */
-			swa.background_pixel = scheme[SchemeNorm][ColBg].pixel;
-			XChangeWindowAttributes(dpy, c->win, CWBackPixel, &swa);
-			sendevent(c->win, xatom[Xembed], StructureNotifyMask, CurrentTime, XEMBED_EMBEDDED_NOTIFY, 0 , systray->win, XEMBED_EMBEDDED_VERSION);
-			XSync(dpy, False);
-			setclientstate(c, NormalState);
-		}
+		if (cme->data.l[1] == SYSTEM_TRAY_REQUEST_DOCK)
+			addsystrayicon(cme->data.l[2]);
 		return;
 	}
 	#endif // BAR_SYSTRAY_PATCH
@@ -2253,10 +2207,7 @@ focus(Client *c)
 		grabbuttons(c, 1);
 		#if !BAR_FLEXWINTITLE_PATCH
 		#if QUBES_DECORATIONS_PATCH
-		if (c->isfloating)
-			XSetWindowBorder(dpy, c->win, scheme[qubesscheme(c)][ColFloat].pixel);
-		else
-			XSetWindowBorder(dpy, c->win, scheme[qubesscheme(c)][ColBorder].pixel);
+		qubesborder(c);
 		#elif RENAMED_SCRATCHPADS_PATCH
 		if (c->scratchkey != 0 && c->isfloating)
 			XSetWindowBorder(dpy, c->win, scheme[SchemeScratchSel][ColFloat].pixel);
@@ -2753,10 +2704,14 @@ manage(Window w, XWindowAttributes *wa)
 	wc.border_width = c->bw;
 	XConfigureWindow(dpy, w, CWBorderWidth, &wc);
 	#if !BAR_FLEXWINTITLE_PATCH
+	#if QUBES_DECORATIONS_PATCH
+	qubesborder(c);
+	#else
 	if (c->isfloating)
 		XSetWindowBorder(dpy, w, scheme[SchemeNorm][ColFloat].pixel);
 	else
 		XSetWindowBorder(dpy, w, scheme[SchemeNorm][ColBorder].pixel);
+	#endif // QUBES_DECORATIONS_PATCH
 	#endif // BAR_FLEXWINTITLE_PATCH
 	configure(c); /* propagates border_width, if size doesn't change */
 	updatesizehints(c);
@@ -2808,7 +2763,11 @@ manage(Window w, XWindowAttributes *wa)
 		settermfloatsize(c, 1);
 		#endif // SWALLOW_PATCH
 		XRaiseWindow(dpy, c->win);
+		#if QUBES_DECORATIONS_PATCH
+		qubesborder(c);
+		#else
 		XSetWindowBorder(dpy, w, scheme[SchemeNorm][ColFloat].pixel);
+		#endif // QUBES_DECORATIONS_PATCH
 	}
 	#if ATTACHABOVE_PATCH || ATTACHASIDE_PATCH || ATTACHBELOW_PATCH || ATTACHBOTTOM_PATCH || SEAMLESS_RESTART_PATCH
 	attachx(c);
@@ -3169,11 +3128,18 @@ propertynotify(XEvent *e)
 		if (ev->atom == XA_WM_NAME || ev->atom == netatom[NetWMName]
 		#if QUBES_DECORATIONS_PATCH
 		|| ev->atom == qubesatom[QubesVMName] || ev->atom == qubesatom[QubesLabel]
+		|| ev->atom == qubesatom[QubesLabelColor]
 		#endif // QUBES_DECORATIONS_PATCH
 		) {
 			updatetitle(c);
+			#if QUBES_DECORATIONS_PATCH
+			if (ev->atom == qubesatom[QubesVMName] || ev->atom == qubesatom[QubesLabel]
+			|| ev->atom == qubesatom[QubesLabelColor] || c == c->mon->sel)
+				drawbar(c->mon);
+			#else
 			if (c == c->mon->sel)
 				drawbar(c->mon);
+			#endif // QUBES_DECORATIONS_PATCH
 			#if TAB_PATCH
 			drawtab(c->mon);
 			#endif // TAB_PATCH
@@ -4078,6 +4044,7 @@ setup(void)
 	#if QUBES_DECORATIONS_PATCH
 	qubesatom[QubesLabel] = XInternAtom(dpy, "_QUBES_LABEL", False);
 	qubesatom[QubesVMName] = XInternAtom(dpy, "_QUBES_VMNAME", False);
+	qubesatom[QubesLabelColor] = XInternAtom(dpy, "_QUBES_LABEL_COLOR", False);
 	#endif // QUBES_DECORATIONS_PATCH
 	#if NET_CLIENT_LIST_STACKING_PATCH
 	netatom[NetClientListStacking] = XInternAtom(dpy, "_NET_CLIENT_LIST_STACKING", False);
@@ -4807,7 +4774,16 @@ unfocus(Client *c, int setfocus, Client *nextfocus)
 	#endif // LOSEFULLSCREEN_PATCH
 	grabbuttons(c, 0);
 	#if !BAR_FLEXWINTITLE_PATCH
+	#if QUBES_DECORATIONS_PATCH
 	#if RENAMED_SCRATCHPADS_PATCH
+	if (c->scratchkey != 0 && c->isfloating)
+		XSetWindowBorder(dpy, c->win, scheme[SchemeScratchNorm][ColFloat].pixel);
+	else if (c->scratchkey != 0)
+		XSetWindowBorder(dpy, c->win, scheme[SchemeScratchNorm][ColBorder].pixel);
+	else
+	#endif // RENAMED_SCRATCHPADS_PATCH
+		qubesborder(c);
+	#elif RENAMED_SCRATCHPADS_PATCH
 	if (c->scratchkey != 0 && c->isfloating)
 		XSetWindowBorder(dpy, c->win, scheme[SchemeScratchNorm][ColFloat].pixel);
 	else if (c->scratchkey != 0)
@@ -4821,7 +4797,7 @@ unfocus(Client *c, int setfocus, Client *nextfocus)
 		XSetWindowBorder(dpy, c->win, scheme[SchemeNorm][ColFloat].pixel);
 	else
 		XSetWindowBorder(dpy, c->win, scheme[SchemeNorm][ColBorder].pixel);
-	#endif // RENAMED_SCRATCHPADS_PATCH
+	#endif // QUBES_DECORATIONS_PATCH
 	#endif // BAR_FLEXWINTITLE_PATCH
 	if (setfocus) {
 		XSetInputFocus(dpy, root, RevertToPointerRoot, CurrentTime);
@@ -4946,10 +4922,10 @@ unmapnotify(XEvent *e)
 			unmanage(c, 0);
 	#if BAR_SYSTRAY_PATCH
 	} else if (showsystray && (c = wintosystrayicon(ev->window))) {
-		/* KLUDGE! sometimes icons occasionally unmap their windows, but do
-		 * _not_ destroy them. We map those windows back */
+		/* Icons unmap across reparent and redraw without destroying.
+		 * Map them back into the tray. Ejecting reparents a mapped
+		 * window to the root origin, which covers the top-left of the bar. */
 		XMapRaised(dpy, c->win);
-		removesystrayicon(c);
 		drawbarwin(systray->bar);
 	#endif // BAR_SYSTRAY_PATCH
 	}

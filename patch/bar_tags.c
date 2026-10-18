@@ -48,13 +48,14 @@ draw_tags(Bar *bar, BarArg *a)
 		icon = tagicon(bar->mon, i);
 		invert = 0;
 		w = TEXTW(icon);
+		#if QUBES_DECORATIONS_PATCH
+		if (m->tagset[m->seltags] & 1 << i && m == selmon && m->sel)
+			drw_setscheme(drw, qubesscheme(m->sel, 0));
+		else
+		#endif // QUBES_DECORATIONS_PATCH
 		drw_setscheme(drw, scheme[
 			m->tagset[m->seltags] & 1 << i
-			#if QUBES_DECORATIONS_PATCH
-			? (m == selmon && m->sel ? qubesscheme(m->sel) : SchemeTagsSel)
-			#else
 			? SchemeTagsSel
-			#endif // QUBES_DECORATIONS_PATCH
 			: urg & 1 << i
 			? SchemeUrg
 			: SchemeTagsNorm

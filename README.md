@@ -23,7 +23,7 @@ On Qubes, flip both in `patches.h` then rebuild (compile in a Fedora AppVM, copy
 #define QUBES_RULES_PATCH 1
 ```
 
-Focused border, title tab, and selected tag follow `_QUBES_LABEL`. Titles are `[vmname] …`. Match rules with `.label` / `.qube`. qdest needs no Qubes patch — it is just `st`.
+Each window's border and title take that qube's `_QUBES_LABEL_COLOR` (the colour Qubes already assigned, including custom labels). Dom0 has no property and is white. Selected tags follow the focused window. Titles are `[vmname] …`. Match rules with `.label` / `.qube`. qdest needs no Qubes patch — it is just `st`.
 
 ## Companion programs
 

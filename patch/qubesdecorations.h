@@ -7,7 +7,7 @@
 #error QUBES_RULES_PATCH requires QUBES_DECORATIONS_PATCH
 #endif
 
-enum { QubesLabel, QubesVMName, QubesLast };
+enum { QubesLabel, QubesVMName, QubesLabelColor, QubesLast };
 
 static inline const char *
 clienttitle(const Client *c)
@@ -24,6 +24,7 @@ static Atom qubesatom[QubesLast];
 static const char qubesdom0[] = "dom0";
 
 static int getlabel(Client *c);
-static int qubesscheme(Client *c);
+static Clr *qubesscheme(Client *c, int dim);
+static void qubesborder(Client *c);
 static void updatequbestitle(Client *c);
 #endif // QUBES_DECORATIONS_PATCH

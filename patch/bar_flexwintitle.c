@@ -213,16 +213,30 @@ flextitledraw(Monitor *m, Client *c, int unused, int x, int w, int tabscheme, Ar
 		: HIDDEN(c)
 		? SchemeHidNorm
 		: c == selmon->sel
-		#if QUBES_DECORATIONS_PATCH
-		? qubesscheme(c)
-		#else
 		? getselschemefor(tabscheme)
-		#endif // QUBES_DECORATIONS_PATCH
 		: getinaschemefor(tabscheme)
 	);
+	Clr *titleclr = scheme[clientscheme];
 
-	drw_setscheme(drw, scheme[clientscheme]);
-	XSetWindowBorder(dpy, c->win, scheme[clientscheme][ColBorder].pixel);
+	#if QUBES_DECORATIONS_PATCH
+	if (!c->isurgent
+		#if RENAMED_SCRATCHPADS_PATCH
+		&& c->scratchkey == 0
+		#endif // RENAMED_SCRATCHPADS_PATCH
+		&& !HIDDEN(c))
+		titleclr = qubesscheme(c, c != selmon->sel);
+	#endif // QUBES_DECORATIONS_PATCH
+	drw_setscheme(drw, titleclr);
+	#if QUBES_DECORATIONS_PATCH
+	if (!c->isurgent
+		#if RENAMED_SCRATCHPADS_PATCH
+		&& c->scratchkey == 0
+		#endif // RENAMED_SCRATCHPADS_PATCH
+	)
+		qubesborder(c);
+	else
+	#endif // QUBES_DECORATIONS_PATCH
+		XSetWindowBorder(dpy, c->win, titleclr[ColBorder].pixel);
 
 	if (w <= TEXTW("A") - lrpad + tpad) // reduce text padding if wintitle is too small
 		tpad = (w - TEXTW("A") + lrpad < 0 ? 0 : (w - TEXTW("A") + lrpad) / 2);
